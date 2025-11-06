@@ -1620,14 +1620,35 @@ function openEditRequestModal(request) {
 async function handleAddRequest(e) {
     e.preventDefault();
 
+    const requesterType = document.getElementById('requester-type').value;
+    const requesterName = document.getElementById('requester-name').value.trim();
+    const contactInfo = document.getElementById('requester-contact').value.trim();
+    const bloodType = document.getElementById('blood-type-needed').value;
+    const quantity = parseInt(document.getElementById('quantity-needed').value);
+    const urgency = document.getElementById('urgency').value;
+    const notes = document.getElementById('request-notes').value.trim();
+
+    // Structure data according to backend expectations
     const requestData = {
-        requesterName: document.getElementById('requester-name').value.trim(),
-        requesterType: document.getElementById('requester-type').value,
-        contactInfo: document.getElementById('requester-contact').value.trim(),
-        bloodType: document.getElementById('blood-type-needed').value,
-        quantity: parseInt(document.getElementById('quantity-needed').value),
-        urgency: document.getElementById('urgency').value,
-        notes: document.getElementById('request-notes').value.trim()
+        patient: requesterType === 'patient' ? {
+            name: requesterName
+        } : undefined,
+        institution: requesterType !== 'patient' ? {
+            name: requesterName,
+            type: requesterType,
+            address: {
+                phone: contactInfo
+            }
+        } : undefined,
+        bloodRequirements: [{
+            bloodType: bloodType,
+            component: 'whole_blood',
+            units: quantity,
+            urgency: urgency === 'critical' ? 'emergency' : urgency === 'urgent' ? 'urgent' : 'routine'
+        }],
+        priority: urgency === 'critical' ? 'critical' : urgency === 'urgent' ? 'high' : 'medium',
+        notes: notes,
+        status: 'pending'
     };
 
     try {
@@ -1647,6 +1668,7 @@ async function handleAddRequest(e) {
             loadDashboardData(); // Update dashboard stats
         } else {
             const error = await response.json();
+            console.error('Request submission error:', error);
             showError(error.error || 'Failed to submit request');
         }
     } catch (error) {
@@ -2056,6 +2078,90 @@ function filterInventory() {
     });
 }
 
+function searchInventory() {
+    const searchTerm = document.getElementById('inventory-search')?.value.toLowerCase() || '';
+
+    const rows = document.querySelectorAll('#inventory-table-body tr');
+
+    rows.forEach(row => {
+        const bloodType = row.cells[0]?.textContent.toLowerCase() || '';
+        const units = row.cells[1]?.textContent.toLowerCase() || '';
+        const status = row.cells[2]?.querySelector('.status-badge')?.textContent.toLowerCase() || '';
+
+        const matchesSearch = bloodType.includes(searchTerm) ||
+                             units.includes(searchTerm) ||
+                             status.includes(searchTerm);
+
+        if (matchesSearch) {
+            row.style.display = '';
+        } else {
+            row.style.display = 'none';
+        }
+    });
+}
+
+function exportInventory() {
+    try {
+        // Get current inventory data
+        const rows = document.querySelectorAll('#inventory-table-body tr:not(.empty-state)');
+        const inventoryData = [];
+
+        rows.forEach(row => {
+            if (row.style.display !== 'none') {
+                const cells = row.querySelectorAll('td');
+                if (cells.length >= 4) {
+                    inventoryData.push({
+                        bloodType: cells[0].textContent.trim(),
+                        units: cells[1].textContent.trim(),
+                        status: cells[2].querySelector('.status-badge')?.textContent.trim() || '',
+                        lastUpdated: cells[3].textContent.trim()
+                    });
+                }
+            }
+        });
+
+        // Create CSV content
+        const csvContent = [
+            ['Blood Type', 'Units Available', 'Status', 'Last Updated'],
+            ...inventoryData.map(item => [
+                item.bloodType,
+                item.units,
+                item.status,
+                item.lastUpdated
+            ])
+        ].map(row => row.map(cell => `"${cell}"`).join(',')).join('\n');
+
+        // Create and download file
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        link.setAttribute('href', url);
+        link.setAttribute('download', `inventory_export_${new Date().toISOString().split('T')[0]}.csv`);
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        showSuccess('Inventory data exported successfully!');
+    } catch (error) {
+        console.error('Export error:', error);
+        showError('Failed to export inventory data');
+    }
+}
+
+function refreshInventory() {
+    showInfo('Refreshing inventory data...');
+    loadInventory();
+}
+
+function toggleTableView() {
+    const table = document.querySelector('.inventory-data-table');
+    if (table) {
+        table.classList.toggle('compact-view');
+        showInfo('Table view toggled');
+    }
+}
+
 async function updateRequestStatus(requestId, newStatus) {
     if (!newStatus) return; // If no status selected, do nothing
 
@@ -2368,6 +2474,10 @@ window.updateRequestStatus = updateRequestStatus;
 window.openAddInventoryModal = openAddInventoryModal;
 window.editInventory = editInventory;
 window.deleteInventory = deleteInventory;
+window.exportInventory = exportInventory;
+window.refreshInventory = refreshInventory;
+window.toggleTableView = toggleTableView;
+window.searchInventory = searchInventory;
 window.openAddCampaignModal = openAddCampaignModal;
 window.editCampaign = editCampaign;
 window.viewCampaign = viewCampaign;
