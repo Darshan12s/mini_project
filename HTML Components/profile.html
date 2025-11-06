@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - LifeFlow Blood Bank</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <link rel="stylesheet" href="../styles/components.css">
+    <link rel="stylesheet" href="../styles/utilities.css">
+</head>
+<body>
+<section id="profile-section" class="content-section">
+    <div class="section-header">
+        <h2>My Profile</h2>
+        <p>Manage your account information and preferences</p>
+    </div>
+
+    <div class="profile-container">
+        <div class="profile-card">
+            <div class="profile-header">
+                <div class="profile-avatar">
+                    <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Profile" id="profile-avatar">
+                    <button class="btn-icon btn-edit-avatar" onclick="changeAvatar()">
+                        <i class="fas fa-camera"></i>
+                    </button>
+                </div>
+                <div class="profile-info">
+                    <h3 id="profile-name">Loading...</h3>
+                    <p id="profile-email">Loading...</p>
+                    <span class="role-badge" id="profile-role">Loading...</span>
+                </div>
+            </div>
+
+            <div class="profile-stats">
+                <div class="stat-item">
+                    <span class="stat-number" id="total-donors">0</span>
+                    <span class="stat-label">Donors Added</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" id="total-requests">0</span>
+                    <span class="stat-label">Requests Managed</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" id="account-age">0</span>
+                    <span class="stat-label">Days Active</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="profile-forms">
+            <div class="form-card">
+                <h3>Personal Information</h3>
+                <form id="profile-form">
+                    <div class="form-group">
+                        <label for="edit-full-name">Full Name</label>
+                        <input type="text" id="edit-full-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-email">Email Address</label>
+                        <input type="email" id="edit-email" readonly>
+                        <small class="form-help">Email cannot be changed</small>
+                    </div>
+                    <button type="submit" class="btn-primary">Update Profile</button>
+                </form>
+            </div>
+
+            <div class="form-card">
+                <h3>Change Password</h3>
+                <form id="password-form">
+                    <div class="form-group">
+                        <label for="current-password">Current Password</label>
+                        <input type="password" id="current-password" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="new-password">New Password</label>
+                        <input type="password" id="new-password" required minlength="6">
+                    </div>
+                    <div class="form-group">
+                        <label for="confirm-password">Confirm New Password</label>
+                        <input type="password" id="confirm-password" required minlength="6">
+                    </div>
+                    <button type="submit" class="btn-primary">Change Password</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>

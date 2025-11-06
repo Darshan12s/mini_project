@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - LifeFlow Blood Bank</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <link rel="stylesheet" href="../styles/components.css">
+    <link rel="stylesheet" href="../styles/utilities.css">
+</head>
+<body>
+<section id="settings-section" class="content-section">
+    <div class="section-header">
+        <h2>System Settings</h2>
+        <p>Configure system preferences and options</p>
+    </div>
+
+    <div class="settings-container">
+        <div class="settings-card">
+            <h3>Notifications</h3>
+            <div class="setting-item">
+                <div class="setting-info">
+                    <label>Email Notifications</label>
+                    <p>Receive email notifications for important updates</p>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="email-notifications" checked>
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+
+            <div class="setting-item">
+                <div class="setting-info">
+                    <label>Low Inventory Alerts</label>
+                    <p>Get notified when blood inventory is running low</p>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="inventory-alerts" checked>
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+
+            <div class="setting-item">
+                <div class="setting-info">
+                    <label>Request Updates</label>
+                    <p>Receive notifications for request status changes</p>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="request-updates" checked>
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+        </div>
+
+        <div class="settings-card">
+            <h3>Display Preferences</h3>
+            <div class="setting-item">
+                <div class="setting-info">
+                    <label>Theme</label>
+                    <p>Choose your preferred theme</p>
+                </div>
+                <select id="theme-select" class="setting-select">
+                    <option value="light">Light</option>
+                    <option value="dark">Dark</option>
+                    <option value="auto">Auto</option>
+                </select>
+            </div>
+
+            <div class="setting-item">
+                <div class="setting-info">
+                    <label>Language</label>
+                    <p>Select your preferred language</p>
+                </div>
+                <select id="language-select" class="setting-select">
+                    <option value="en">English</option>
+                    <option value="es">Spanish</option>
+                    <option value="fr">French</option>
+                </select>
+            </div>
+
+            <div class="setting-item">
+                <div class="setting-info">
+                    <label>Items Per Page</label>
+                    <p>Number of items to display per page</p>
+                </div>
+                <select id="items-per-page" class="setting-select">
+                    <option value="10">10</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="settings-card">
+            <h3>System Information</h3>
+            <div class="system-info">
+                <div class="info-item">
+                    <span class="info-label">Version:</span>
+                    <span class="info-value">1.0.0</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Last Updated:</span>
+                    <span class="info-value" id="last-updated">Loading...</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Database Status:</span>
+                    <span class="info-value status-online">Online</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="settings-actions">
+            <button class="btn-primary" onclick="saveSettings()">
+                <i class="fas fa-save"></i> Save Settings
+            </button>
+            <button class="btn-secondary" onclick="resetSettings()">
+                <i class="fas fa-undo"></i> Reset to Default
+            </button>
+        </div>
+    </div>
+</section>
+</body>
+</html>

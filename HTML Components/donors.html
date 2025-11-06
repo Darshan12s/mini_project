@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Donor Management - LifeFlow Blood Bank</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <link rel="stylesheet" href="../styles/components.css">
+    <link rel="stylesheet" href="../styles/utilities.css">
+</head>
+<body>
+<section id="donors-section" class="content-section">
+    <div class="section-header">
+        <h2>Donor Management</h2>
+        <p>Manage blood donor information and donation records</p>
+    </div>
+
+    <div class="donor-controls">
+        <button class="btn-primary" onclick="openAddDonorModal()">
+            <i class="fas fa-plus"></i> Add New Donor
+        </button>
+        <div class="filter-controls">
+            <select id="donor-blood-filter" onchange="filterDonors()">
+                <option value="">All Blood Types</option>
+                <option value="A+">A+</option>
+                <option value="A-">A-</option>
+                <option value="B+">B+</option>
+                <option value="B-">B-</option>
+                <option value="AB+">AB+</option>
+                <option value="AB-">AB-</option>
+                <option value="O+">O+</option>
+                <option value="O-">O-</option>
+            </select>
+            <select id="donor-status-filter" onchange="filterDonors()">
+                <option value="">All Statuses</option>
+                <option value="eligible">Eligible</option>
+                <option value="ineligible">Ineligible</option>
+                <option value="deferred">Deferred</option>
+            </select>
+            <div class="search-box">
+                <input type="text" id="donor-search" placeholder="Search donors..." onkeyup="filterDonors()">
+                <button onclick="filterDonors()"><i class="fas fa-search"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Blood Type</th>
+                    <th>Contact</th>
+                    <th>Last Donation</th>
+                    <th>Eligibility</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="donor-table-body">
+                <tr>
+                    <td>Alice Johnson</td>
+                    <td>B+</td>
+                    <td>alice@example.com<br><small>+1234567892</small></td>
+                    <td>2024-01-15</td>
+                    <td><span class="status-badge status-eligible">Eligible</span></td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn-icon btn-edit" onclick="editDonor('507f1f77bcf86cd799439013')" title="Edit Donor">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn-icon btn-delete" onclick="deleteDonor('507f1f77bcf86cd799439013')" title="Delete Donor">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                            <select class="status-select" onchange="updateDonorEligibility('507f1f77bcf86cd799439013', this.value)">
+                                <option value="">Update Eligibility</option>
+                                <option value="eligible" selected>Eligible</option>
+                                <option value="ineligible">Ineligible</option>
+                                <option value="deferred">Deferred</option>
+                            </select>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Bob Smith</td>
+                    <td>O-</td>
+                    <td>bob@example.com<br><small>+1234567893</small></td>
+                    <td>2024-02-20</td>
+                    <td><span class="status-badge status-eligible">Eligible</span></td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn-icon btn-edit" onclick="editDonor('507f1f77bcf86cd799439014')" title="Edit Donor">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn-icon btn-delete" onclick="deleteDonor('507f1f77bcf86cd799439014')" title="Delete Donor">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                            <select class="status-select" onchange="updateDonorEligibility('507f1f77bcf86cd799439014', this.value)">
+                                <option value="">Update Eligibility</option>
+                                <option value="eligible" selected>Eligible</option>
+                                <option value="ineligible">Ineligible</option>
+                                <option value="deferred">Deferred</option>
+                            </select>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Charlie Brown</td>
+                    <td>AB+</td>
+                    <td>charlie@example.com<br><small>+1234567896</small></td>
+                    <td>Never</td>
+                    <td><span class="status-badge status-eligible">Eligible</span></td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn-icon btn-edit" onclick="editDonor('507f1f77bcf86cd799439015')" title="Edit Donor">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn-icon btn-delete" onclick="deleteDonor('507f1f77bcf86cd799439015')" title="Delete Donor">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                            <select class="status-select" onchange="updateDonorEligibility('507f1f77bcf86cd799439015', this.value)">
+                                <option value="">Update Eligibility</option>
+                                <option value="eligible" selected>Eligible</option>
+                                <option value="ineligible">Ineligible</option>
+                                <option value="deferred">Deferred</option>
+                            </select>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="pagination-container">
+        <div id="donor-pagination" class="pagination">
+            <!-- Pagination will be loaded here -->
+        </div>
+    </div>
+</section>
+</body>
+</html>

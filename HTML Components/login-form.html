@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - LifeFlow Blood Bank</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <link rel="stylesheet" href="../styles/components.css">
+    <link rel="stylesheet" href="../styles/utilities.css">
+</head>
+<body>
+<div id="login-screen" class="login-container">
+    <div class="login-card">
+        <div class="login-header">
+            <img src="https://cdn-icons-png.flaticon.com/512/3265/3265972.png" alt="Blood Drop" class="logo">
+            <h1>LifeFlow Blood Bank</h1>
+            <p>Manage donations and save lives</p>
+        </div>
+        <form id="login-form" class="login-form">
+            <div class="form-group">
+                <input type="email" id="email" name="email" placeholder=" " required>
+                <label for="email">Email Address *</label>
+                <small class="form-help">Your registered email address</small>
+            </div>
+            <div class="form-group">
+                <input type="password" id="password" name="password" placeholder=" " required>
+                <label for="password">Password *</label>
+                <small class="form-help">Case-sensitive password</small>
+            </div>
+            <div class="form-options">
+                <label class="checkbox-container">
+                    <input type="checkbox" id="remember-me">
+                    <span class="checkmark"></span>
+                    Remember me
+                </label>
+                <a href="#" class="forgot-password">Forgot Password?</a>
+            </div>
+            <button type="submit" class="btn-primary">
+                <i class="fas fa-sign-in-alt"></i> Sign In
+            </button>
+        </form>
+        <div class="login-footer">
+            <p>Don't have an account? <a href="#" id="show-register">Create Account</a></p>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const loginForm = document.getElementById('login-form');
+
+    loginForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        const submitBtn = loginForm.querySelector('button[type="submit"]');
+        const originalText = submitBtn.innerHTML;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Signing In...';
+        submitBtn.disabled = true;
+
+        try {
+            const loginData = {
+                email: document.getElementById('email').value.trim(),
+                password: document.getElementById('password').value
+            };
+
+            const response = await fetch('/api/auth/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(loginData)
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                // Store token
+                localStorage.setItem('authToken', data.token);
+
+                showSuccess('Login successful! Redirecting...');
+
+                // Hide login screen and show main app after short delay
+                setTimeout(() => {
+                    const loginScreen = document.getElementById('login-screen');
+                    const registerScreen = document.getElementById('register-screen');
+                    const app = document.getElementById('app');
+                    const userName = document.getElementById('user-name');
+
+                    if (loginScreen) loginScreen.classList.add('hidden');
+                    if (registerScreen) registerScreen.classList.add('hidden');
+                    if (app) app.classList.remove('hidden');
+                    if (userName) userName.textContent = data.user.email;
+                }, 1000);
+            } else {
+                showError(data.error || 'Login failed');
+            }
+        } catch (error) {
+            console.error('Login error:', error);
+            showError('Network error. Please check your connection and try again.');
+        } finally {
+            submitBtn.innerHTML = originalText;
+            submitBtn.disabled = false;
+        }
+    });
+
+    // Handle "Remember Me" functionality
+    const rememberMe = document.getElementById('remember-me');
+    const emailInput = document.getElementById('email');
+
+    // Load remembered email if exists
+    const rememberedEmail = localStorage.getItem('rememberedEmail');
+    if (rememberedEmail) {
+        emailInput.value = rememberedEmail;
+        rememberMe.checked = true;
+    }
+
+    // Save email when remember me is checked
+    rememberMe.addEventListener('change', function() {
+        if (this.checked) {
+            localStorage.setItem('rememberedEmail', emailInput.value);
+        } else {
+            localStorage.removeItem('rememberedEmail');
+        }
+    });
+
+    // Update remembered email on input
+    emailInput.addEventListener('input', function() {
+        if (rememberMe.checked) {
+            localStorage.setItem('rememberedEmail', this.value);
+        }
+    });
+});
+
+// Utility functions for notifications
+function showError(message) {
+    const notification = document.createElement('div');
+    notification.className = 'notification notification-error';
+    notification.innerHTML = `<i class="fas fa-exclamation-triangle"></i> ${message}`;
+    document.body.appendChild(notification);
+    setTimeout(() => notification.remove(), 5000);
+}
+
+function showSuccess(message) {
+    const notification = document.createElement('div');
+    notification.className = 'notification notification-success';
+    notification.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
+    document.body.appendChild(notification);
+    setTimeout(() => notification.remove(), 5000);
+}
+</script>
+
+</body>
+</html>

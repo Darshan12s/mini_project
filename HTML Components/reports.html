@@ -1,0 +1,172 @@
+<section id="reports-section" class="content-section">
+    <div class="section-header">
+        <h2>Reports & Analytics</h2>
+        <p>Generate reports and analyze system data</p>
+    </div>
+
+    <div class="reports-controls">
+        <div class="report-filters">
+            <select id="report-type">
+                <option value="donor">Donor Reports</option>
+                <option value="inventory">Inventory Reports</option>
+                <option value="request">Request Reports</option>
+                <option value="campaign">Campaign Reports</option>
+            </select>
+            <select id="report-period">
+                <option value="weekly">This Week</option>
+                <option value="monthly">This Month</option>
+                <option value="quarterly">This Quarter</option>
+                <option value="yearly">This Year</option>
+            </select>
+            <button class="btn-primary" onclick="generateReport()">
+                <i class="fas fa-chart-bar"></i> Generate Report
+            </button>
+            <button class="btn-secondary" onclick="exportReport()">
+                <i class="fas fa-download"></i> Export
+            </button>
+        </div>
+    </div>
+
+    <div class="reports-grid">
+        <div class="report-card">
+            <div class="report-header">
+                <h3>Donor Statistics</h3>
+                <span class="report-period">Last 30 days</span>
+            </div>
+            <div class="report-metrics">
+                <div class="metric">
+                    <span class="metric-value">3</span>
+                    <span class="metric-label">New Donors</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-value">89</span>
+                    <span class="metric-label">Total Donations</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-value">95%</span>
+                    <span class="metric-label">Eligibility Rate</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="report-card">
+            <div class="report-header">
+                <h3>Blood Inventory</h3>
+                <span class="report-period">Current Status</span>
+            </div>
+            <div class="report-metrics">
+                <div class="metric">
+                    <span class="metric-value">149</span>
+                    <span class="metric-label">Total Units</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-value">40</span>
+                    <span class="metric-label">Low Stock</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-value">8</span>
+                    <span class="metric-label">Expiring Soon</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="report-card">
+            <div class="report-header">
+                <h3>Blood Requests</h3>
+                <span class="report-period">Last 30 days</span>
+            </div>
+            <div class="report-metrics">
+                <div class="metric">
+                    <span class="metric-value">6</span>
+                    <span class="metric-label">Total Requests</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-value">4</span>
+                    <span class="metric-label">Approved</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-value">2</span>
+                    <span class="metric-label">Pending</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="report-card">
+            <div class="report-header">
+                <h3>Campaign Performance</h3>
+                <span class="report-period">Last 90 days</span>
+            </div>
+            <div class="report-metrics">
+                <div class="metric">
+                    <span class="metric-value">3</span>
+                    <span class="metric-label">Active Campaigns</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-value">307</span>
+                    <span class="metric-label">Total Registrations</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-value">176</span>
+                    <span class="metric-label">Successful Donations</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="report-charts">
+        <div class="chart-container">
+            <h3>Blood Type Distribution</h3>
+            <canvas id="bloodTypeChart" width="400" height="200"></canvas>
+        </div>
+        <div class="chart-container">
+            <h3>Monthly Donation Trends</h3>
+            <canvas id="donationTrendChart" width="400" height="200"></canvas>
+        </div>
+    </div>
+
+    <div class="report-table-container">
+        <h3>Recent Activity</h3>
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Activity</th>
+                    <th>User</th>
+                    <th>Details</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>2024-11-05</td>
+                    <td>Donor Added</td>
+                    <td>Admin</td>
+                    <td>Alice Johnson (B+) registered as new donor</td>
+                </tr>
+                <tr>
+                    <td>2024-11-05</td>
+                    <td>Blood Request</td>
+                    <td>Staff</td>
+                    <td>City General Hospital requested 2 units O+</td>
+                </tr>
+                <tr>
+                    <td>2024-11-04</td>
+                    <td>Inventory Update</td>
+                    <td>System</td>
+                    <td>Added 50 units to inventory</td>
+                </tr>
+                <tr>
+                    <td>2024-11-03</td>
+                    <td>Campaign Created</td>
+                    <td>Admin</td>
+                    <td>City Center Blood Drive campaign launched</td>
+                </tr>
+                <tr>
+                    <td>2024-11-02</td>
+                    <td>Donor Updated</td>
+                    <td>Staff</td>
+                    <td>Bob Smith eligibility status updated</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</section>

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Request Management - LifeFlow Blood Bank</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <link rel="stylesheet" href="../styles/components.css">
+    <link rel="stylesheet" href="../styles/utilities.css">
+</head>
+<body>
+    <section id="requests-section" class="content-section">
+        <div class="section-header">
+            <h2>Blood Request Management</h2>
+            <p>Manage blood requests from hospitals and patients</p>
+        </div>
+
+        <div class="request-controls">
+            <button class="btn-primary" onclick="openAddRequestModal()">
+                <i class="fas fa-plus"></i> New Request
+            </button>
+            <div class="filter-controls">
+                <select id="request-status-filter" onchange="filterRequests()">
+                    <option value="">All Statuses</option>
+                    <option value="pending">Pending</option>
+                    <option value="approved">Approved</option>
+                    <option value="rejected">Rejected</option>
+                    <option value="fulfilled">Fulfilled</option>
+                </select>
+                <select id="request-urgency-filter" onchange="filterRequests()">
+                    <option value="">All Urgency Levels</option>
+                    <option value="normal">Normal</option>
+                    <option value="urgent">Urgent</option>
+                    <option value="critical">Critical</option>
+                </select>
+                <select id="request-type-filter" onchange="filterRequests()">
+                    <option value="">All Types</option>
+                    <option value="hospital">Hospital</option>
+                    <option value="patient">Patient</option>
+                </select>
+                <div class="search-box">
+                    <input type="text" id="request-search" placeholder="Search requests..." onkeyup="filterRequests()">
+                    <button onclick="filterRequests()"><i class="fas fa-search"></i></button>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Request ID</th>
+                        <th>Type</th>
+                        <th>Requester</th>
+                        <th>Blood Type</th>
+                        <th>Quantity</th>
+                        <th>Urgency</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="request-table-body">
+                    <tr>
+                        <td>REQ202411050001</td>
+                        <td>Hospital</td>
+                        <td>City General Hospital<br><small>+1234567898</small></td>
+                        <td>O+</td>
+                        <td>2 units</td>
+                        <td><span class="urgency-badge urgency-urgent">Urgent</span></td>
+                        <td><span class="status-badge status-approved">Approved</span></td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn-icon btn-edit" onclick="editRequest('507f1f77bcf86cd799439016')" title="Edit Request">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn-icon btn-delete" onclick="deleteRequest('507f1f77bcf86cd799439016')" title="Delete Request">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                                <select class="status-select" onchange="updateRequestStatus('507f1f77bcf86cd799439016', this.value)">
+                                    <option value="">Update Status</option>
+                                    <option value="approved">Approve</option>
+                                    <option value="rejected">Reject</option>
+                                    <option value="fulfilled">Fulfill</option>
+                                </select>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>REQ202411050002</td>
+                        <td>Hospital</td>
+                        <td>Regional Medical Center<br><small>+1234567899</small></td>
+                        <td>A-</td>
+                        <td>1 units</td>
+                        <td><span class="urgency-badge urgency-normal">Normal</span></td>
+                        <td><span class="status-badge status-pending">Pending</span></td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn-icon btn-edit" onclick="editRequest('507f1f77bcf86cd799439017')" title="Edit Request">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn-icon btn-delete" onclick="deleteRequest('507f1f77bcf86cd799439017')" title="Delete Request">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                                <select class="status-select" onchange="updateRequestStatus('507f1f77bcf86cd799439017', this.value)">
+                                    <option value="">Update Status</option>
+                                    <option value="approved">Approve</option>
+                                    <option value="rejected">Reject</option>
+                                    <option value="fulfilled">Fulfill</option>
+                                </select>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>REQ202411050003</td>
+                        <td>Emergency</td>
+                        <td>Emergency Care Unit<br><small>+1234567800</small></td>
+                        <td>B+</td>
+                        <td>3 units</td>
+                        <td><span class="urgency-badge urgency-critical">Critical</span></td>
+                        <td><span class="status-badge status-approved">Approved</span></td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn-icon btn-edit" onclick="editRequest('507f1f77bcf86cd799439018')" title="Edit Request">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn-icon btn-delete" onclick="deleteRequest('507f1f77bcf86cd799439018')" title="Delete Request">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                                <select class="status-select" onchange="updateRequestStatus('507f1f77bcf86cd799439018', this.value)">
+                                    <option value="">Update Status</option>
+                                    <option value="approved">Approve</option>
+                                    <option value="rejected">Reject</option>
+                                    <option value="fulfilled">Fulfill</option>
+                                </select>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="pagination-container">
+            <div id="request-pagination" class="pagination">
+                <!-- Pagination will be loaded here -->
+            </div>
+        </div>
+    </section>
+</body>
+</html>

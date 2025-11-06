@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Header - LifeFlow Blood Bank</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <link rel="stylesheet" href="../styles/components.css">
+    <link rel="stylesheet" href="../styles/utilities.css">
+</head>
+<body>
+<header class="header">
+    <div class="header-left">
+        <button id="sidebar-toggle" class="menu-toggle">
+            <i class="fas fa-bars"></i>
+        </button>
+        <div class="logo-section">
+            <img src="https://cdn-icons-png.flaticon.com/512/3265/3265972.png" alt="Blood Drop" class="header-logo">
+            <h1 class="app-title">LifeFlow Blood Bank</h1>
+        </div>
+    </div>
+    <div class="header-center">
+        <div class="header-stats">
+            <div class="header-stat">
+                <i class="fas fa-tint"></i>
+                <span id="header-blood-units">1,245</span>
+                <small>Units Available</small>
+            </div>
+            <div class="header-stat">
+                <i class="fas fa-users"></i>
+                <span id="header-active-donors">586</span>
+                <small>Active Donors</small>
+            </div>
+            <div class="header-stat">
+                <i class="fas fa-clock"></i>
+                <span id="header-pending-requests">24</span>
+                <small>Pending Requests</small>
+            </div>
+        </div>
+    </div>
+    <div class="header-right">
+        <div class="header-actions">
+            <button class="icon-btn" title="Notifications">
+                <i class="fas fa-bell"></i>
+                <span class="notification-badge" id="notification-count">3</span>
+            </button>
+            <button class="icon-btn" title="Quick Actions">
+                <i class="fas fa-plus-circle"></i>
+            </button>
+        </div>
+        <div class="user-profile">
+            <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="User" class="user-avatar" id="user-avatar">
+            <div class="user-info">
+                <span id="user-name">Admin</span>
+                <small id="user-role">Administrator</small>
+            </div>
+            <div class="dropdown-menu">
+                <a href="#" onclick="showSection('profile')"><i class="fas fa-user"></i> Profile</a>
+                <a href="#" onclick="showSection('settings')"><i class="fas fa-cog"></i> Settings</a>
+                <a href="#" onclick="showSection('dashboard')"><i class="fas fa-home"></i> Dashboard</a>
+                <div class="dropdown-divider"></div>
+                <a href="#" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </div>
+        </div>
+    </div>
+</header>
+</body>
+</html>

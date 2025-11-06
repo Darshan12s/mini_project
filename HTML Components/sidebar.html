@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sidebar - LifeFlow Blood Bank</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <link rel="stylesheet" href="../styles/components.css">
+    <link rel="stylesheet" href="../styles/utilities.css">
+</head>
+<body>
+<aside class="sidebar" id="sidebar">
+    <!-- Sidebar Header -->
+    <div class="sidebar-header">
+        <div class="sidebar-logo">
+            <img src="https://cdn-icons-png.flaticon.com/512/3265/3265972.png" alt="LifeFlow" class="sidebar-logo-icon">
+            <div class="sidebar-brand">
+                <h3>LifeFlow</h3>
+                <span>Blood Bank</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation Menu -->
+    <nav class="sidebar-nav">
+        <div class="nav-section">
+            <div class="nav-section-title">Main Menu</div>
+            <a href="#dashboard" class="nav-item active" data-section="dashboard">
+                <div class="nav-icon">
+                    <i class="fas fa-home"></i>
+                </div>
+                <span class="nav-text">Dashboard</span>
+                <div class="nav-indicator"></div>
+            </a>
+            <a href="#inventory" class="nav-item" data-section="inventory">
+                <div class="nav-icon">
+                    <i class="fas fa-tint"></i>
+                </div>
+                <span class="nav-text">Blood Inventory</span>
+                <div class="nav-indicator"></div>
+            </a>
+            <a href="#donors" class="nav-item" data-section="donors">
+                <div class="nav-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <span class="nav-text">Donors</span>
+                <div class="nav-indicator"></div>
+            </a>
+            <a href="#requests" class="nav-item" data-section="requests">
+                <div class="nav-icon">
+                    <i class="fas fa-hand-holding-heart"></i>
+                </div>
+                <span class="nav-text">Requests</span>
+                <div class="nav-indicator"></div>
+            </a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Management</div>
+            <a href="#campaigns" class="nav-item" data-section="campaigns">
+                <div class="nav-icon">
+                    <i class="fas fa-calendar-alt"></i>
+                </div>
+                <span class="nav-text">Campaigns</span>
+                <div class="nav-indicator"></div>
+            </a>
+            <a href="#reports" class="nav-item" data-section="reports">
+                <div class="nav-icon">
+                    <i class="fas fa-chart-bar"></i>
+                </div>
+                <span class="nav-text">Reports</span>
+                <div class="nav-indicator"></div>
+            </a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Account</div>
+            <a href="#profile" class="nav-item" data-section="profile">
+                <div class="nav-icon">
+                    <i class="fas fa-user"></i>
+                </div>
+                <span class="nav-text">Profile</span>
+                <div class="nav-indicator"></div>
+            </a>
+            <a href="#settings" class="nav-item" data-section="settings">
+                <div class="nav-icon">
+                    <i class="fas fa-cog"></i>
+                </div>
+                <span class="nav-text">Settings</span>
+                <div class="nav-indicator"></div>
+            </a>
+        </div>
+    </nav>
+
+    <!-- System Status -->
+    <div class="sidebar-footer">
+        <div class="system-status">
+            <div class="status-indicator online"></div>
+            <div class="status-info">
+                <span class="status-text">System Online</span>
+                <span class="status-time">Last sync: 2 min ago</span>
+            </div>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="sidebar-stats">
+            <div class="stat-item">
+                <span class="stat-value" id="sidebar-blood-count">1,245</span>
+                <span class="stat-label">Units</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-value" id="sidebar-donor-count">586</span>
+                <span class="stat-label">Donors</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-value" id="sidebar-request-count">24</span>
+                <span class="stat-label">Requests</span>
+            </div>
+        </div>
+
+        <!-- User Quick Actions -->
+        <div class="sidebar-actions">
+            <button class="quick-action-btn" title="Add Donor" onclick="showSection('donors')">
+                <i class="fas fa-user-plus"></i>
+            </button>
+            <button class="quick-action-btn" title="New Request" onclick="showSection('requests')">
+                <i class="fas fa-plus-circle"></i>
+            </button>
+            <button class="quick-action-btn" title="Emergency Alert" onclick="showEmergencyModal()">
+                <i class="fas fa-exclamation-triangle"></i>
+            </button>
+        </div>
+    </div>
+</aside>
+</body>
+</html>

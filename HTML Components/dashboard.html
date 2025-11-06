@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - LifeFlow Blood Bank</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <link rel="stylesheet" href="../styles/components.css">
+    <link rel="stylesheet" href="../styles/utilities.css">
+</head>
+<body>
+<section id="dashboard-section" class="content-section">
+    <div class="section-header">
+        <h2><i class="fas fa-home"></i> Dashboard</h2>
+        <p>Welcome to LifeFlow Blood Bank Management System</p>
+    </div>
+
+    <!-- Quick Actions Bar -->
+    <div class="quick-actions">
+        <button class="action-btn primary" onclick="openAddDonorModal()">
+            <i class="fas fa-user-plus"></i>
+            <span>Add Donor</span>
+        </button>
+        <button class="action-btn secondary" onclick="openAddRequestModal()">
+            <i class="fas fa-hand-holding-heart"></i>
+            <span>New Request</span>
+        </button>
+        <button class="action-btn info" onclick="showSection('inventory')">
+            <i class="fas fa-tint"></i>
+            <span>Check Inventory</span>
+        </button>
+        <button class="action-btn success" onclick="showSection('campaigns')">
+            <i class="fas fa-calendar-plus"></i>
+            <span>Create Campaign</span>
+        </button>
+    </div>
+<br><br><br><br>
+    <!-- Statistics Grid -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-tint"></i>
+            </div>
+            <div class="stat-info">
+                <h3>Total Blood Units</h3>
+                <span class="stat-number" id="total-blood-units">1,245</span>
+                <div class="stat-trend positive">
+                    <i class="fas fa-arrow-up"></i>
+                    <span>+12.5%</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-users"></i>
+            </div>
+            <div class="stat-info">
+                <h3>Active Donors</h3>
+                <span class="stat-number" id="active-donors">586</span>
+                <div class="stat-trend positive">
+                    <i class="fas fa-arrow-up"></i>
+                    <span>+8.2%</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-hand-holding-heart"></i>
+            </div>
+            <div class="stat-info">
+                <h3>Pending Requests</h3>
+                <span class="stat-number" id="pending-requests">24</span>
+                <div class="stat-trend negative">
+                    <i class="fas fa-arrow-down"></i>
+                    <span>-5.1%</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-calendar-alt"></i>
+            </div>
+            <div class="stat-info">
+                <h3>Active Campaigns</h3>
+                <span class="stat-number" id="active-campaigns">5</span>
+                <div class="stat-trend neutral">
+                    <i class="fas fa-minus"></i>
+                    <span>0.0%</span>
+                </div>
+            </div>
+        </div>
+    </div>
+<br><br>
+    <!-- Charts and Analytics -->
+    <div class="dashboard-grid">
+        <!-- Blood Type Distribution -->
+        <div class="chart-card">
+            <div class="card-header">
+                <h3><i class="fas fa-chart-pie"></i> Blood Type Distribution</h3>
+                <div class="card-actions">
+                    <button class="btn-icon" title="Refresh">
+                        <i class="fas fa-sync-alt"></i>
+                    </button>
+                    <button class="btn-icon" title="Export">
+                        <i class="fas fa-download"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="chart-placeholder">
+                    <canvas id="bloodTypeChart" width="400" height="250"></canvas>
+                </div>
+                <div class="chart-legend">
+                    <div class="legend-item">
+                        <span class="legend-color" style="background-color: #e74c3c;"></span>
+                        <span>A+ (35%)</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color" style="background-color: #3498db;"></span>
+                        <span>O+ (28%)</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color" style="background-color: #27ae60;"></span>
+                        <span>B+ (18%)</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color" style="background-color: #f39c12;"></span>
+                        <span>AB+ (12%)</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color" style="background-color: #9b59b6;"></span>
+                        <span>Others (7%)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+<br><br>
+        <!-- Monthly Donations Trend -->
+        <div class="chart-card">
+            <div class="card-header">
+                <h3><i class="fas fa-chart-line"></i> Monthly Donations Trend</h3>
+                <div class="card-actions">
+                    <select class="period-select">
+                        <option value="6">Last 6 Months</option>
+                        <option value="12">Last Year</option>
+                        <option value="24">Last 2 Years</option>
+                    </select>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="chart-placeholder">
+                    <canvas id="donationTrendChart" width="400" height="250"></canvas>
+                </div>
+            </div>
+        </div>
+<br><br>
+        <!-- Recent Activity -->
+        <div class="activity-card">
+            <div class="card-header">
+                <h3><i class="fas fa-history"></i> Recent Activity</h3>
+                <div class="card-actions">
+                    <button class="btn-link">View All</button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="activity-list">
+                    <div class="activity-item">
+                        <div class="activity-icon success">
+                            <i class="fas fa-tint"></i>
+                        </div>
+                        <div class="activity-content">
+                            <p><strong>John Doe</strong> donated <strong>O+ blood</strong></p>
+                            <span class="activity-time">2 hours ago</span>
+                        </div>
+                    </div>
+
+                    <div class="activity-item">
+                        <div class="activity-icon warning">
+                            <i class="fas fa-hand-holding-heart"></i>
+                        </div>
+                        <div class="activity-content">
+                            <p>New request from <strong>City Hospital</strong> for <strong>A+ blood</strong></p>
+                            <span class="activity-time">4 hours ago</span>
+                        </div>
+                    </div>
+
+                    <div class="activity-item">
+                        <div class="activity-icon info">
+                            <i class="fas fa-user-plus"></i>
+                        </div>
+                        <div class="activity-content">
+                            <p><strong>Sarah Wilson</strong> registered as a new donor</p>
+                            <span class="activity-time">6 hours ago</span>
+                        </div>
+                    </div>
+
+                    <div class="activity-item">
+                        <div class="activity-icon primary">
+                            <i class="fas fa-calendar-check"></i>
+                        </div>
+                        <div class="activity-content">
+                            <p><strong>Community Drive</strong> campaign completed successfully</p>
+                            <span class="activity-time">1 day ago</span>
+                        </div>
+                    </div>
+
+                    <div class="activity-item">
+                        <div class="activity-icon danger">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <div class="activity-content">
+                            <p><strong>B- blood</strong> inventory running low</p>
+                            <span class="activity-time">2 days ago</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+<br><br>
+        <!-- Quick Stats -->
+        <div class="stats-overview-card">
+            <div class="card-header">
+                <h3><i class="fas fa-chart-bar"></i> Quick Overview</h3>
+            </div>
+            <div class="card-body">
+                <div class="overview-grid">
+                    <div class="overview-item">
+                        <div class="overview-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="overview-info">
+                            <span class="overview-value">98.5%</span>
+                            <span class="overview-label">Uptime</span>
+                        </div>
+                    </div>
+
+                    <div class="overview-item">
+                        <div class="overview-icon">
+                            <i class="fas fa-heartbeat"></i>
+                        </div>
+                        <div class="overview-info">
+                            <span class="overview-value">247</span>
+                            <span class="overview-label">Lives Saved</span>
+                        </div>
+                    </div>
+
+                    <div class="overview-item">
+                        <div class="overview-icon">
+                            <i class="fas fa-calendar-day"></i>
+                        </div>
+                        <div class="overview-info">
+                            <span class="overview-value">12</span>
+                            <span class="overview-label">Days This Month</span>
+                        </div>
+                    </div>
+
+                    <div class="overview-item">
+                        <div class="overview-icon">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <div class="overview-info">
+                            <span class="overview-value">4.8</span>
+                            <span class="overview-label">Rating</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<br><br>
+    <!-- Alerts and Notifications -->
+    <div class="alerts-section">
+        <div class="alert-card warning">
+            <div class="alert-icon">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <div class="alert-content">
+                <h4>Low Inventory Alert</h4>
+                <p>AB- blood type is running critically low. Consider organizing a targeted donation drive.</p>
+                <div class="alert-actions">
+                    <button class="btn-sm primary" onclick="showSection('campaigns')">Create Campaign</button>
+                    <button class="btn-sm secondary" onclick="showSection('inventory')">View Inventory</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="alert-card info">
+            <div class="alert-icon">
+                <i class="fas fa-calendar-alt"></i>
+            </div>
+            <div class="alert-content">
+                <h4>Upcoming Campaign</h4>
+                <p>Holiday Blood Drive is scheduled for December 15th. Prepare promotional materials.</p>
+                <div class="alert-actions">
+                    <button class="btn-sm primary" onclick="showSection('campaigns')">View Details</button>
+                    <button class="btn-sm secondary" onclick="showSection('campaigns')">Edit Campaign</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>

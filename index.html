@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Content Security Policy is now handled by Helmet in server.js -->
+    <title>LifeFlow Blood Bank Management System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/components.css">
+    <link rel="stylesheet" href="styles/utilities.css">
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="login-screen" class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <img src="https://cdn-icons-png.flaticon.com/512/3265/3265972.png" alt="Blood Drop" class="logo">
+                <h1>LifeFlow Blood Bank</h1>
+                <p>Manage donations and save lives</p>
+            </div>
+            <form id="login-form" class="login-form">
+                <div class="form-group">
+                    <input type="email" id="email" name="email" placeholder=" " required>
+                    <label for="email">Email Address *</label>
+                    <small class="form-help">Your registered email address</small>
+                </div>
+                <div class="form-group">
+                    <input type="password" id="password" name="password" placeholder=" " required>
+                    <label for="password">Password *</label>
+                    <small class="form-help">Case-sensitive password</small>
+                </div>
+                <div class="form-options">
+                    <label class="checkbox-container">
+                        <input type="checkbox" id="remember-me">
+                        <span class="checkmark"></span>
+                        Remember me
+                    </label>
+                    <a href="#" class="forgot-password">Forgot Password?</a>
+                </div>
+                <button type="submit" class="btn-primary">
+                    <i class="fas fa-sign-in-alt"></i> Sign In
+                </button>
+            </form>
+            <div class="login-footer">
+                <p>Don't have an account? <a href="#" id="show-register">Create Account</a></p>
+            </div>
+        </div>
+
+        <!-- Blood Compatibility Background -->
+        <div class="blood-compatibility-bg">
+            <div class="compatibility-table-container">
+                <h3>Blood Type Compatibility</h3>
+                <table class="compatibility-table">
+                    <tr>
+                        <th></th>
+                        <th>A+</th>
+                        <th>A-</th>
+                        <th>B+</th>
+                        <th>B-</th>
+                        <th>AB+</th>
+                        <th>AB-</th>
+                        <th>O+</th>
+                        <th>O-</th>
+                    </tr>
+                    <tr>
+                        <td class="donor-type">Can donate to:</td>
+                        <td class="compatible">A+, AB+</td>
+                        <td class="compatible">A+, A-, AB+, AB-</td>
+                        <td class="compatible">B+, AB+</td>
+                        <td class="compatible">B+, B-, AB+, AB-</td>
+                        <td class="compatible">AB+</td>
+                        <td class="compatible">AB+, AB-</td>
+                        <td class="compatible">A+, B+, AB+, O+</td>
+                        <td class="compatible">All types</td>
+                    </tr>
+                </table>
+                <div class="compatibility-legend">
+                    <div class="legend-item">
+                        <span class="legend-color compatible"></span>
+                        <span>Compatible</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color incompatible"></span>
+                        <span>Incompatible</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Register Screen -->
+    <div id="register-screen" class="login-container hidden">
+        <div class="login-card">
+            <div class="login-header">
+                <img src="https://cdn-icons-png.flaticon.com/512/2991/2991112.png" alt="Blood Bank Logo" class="logo">
+                <h1>Create Account</h1>
+                <p>Join LifeFlow Blood Bank</p>
+            </div>
+            <form id="register-form" class="login-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <input type="text" id="reg-first-name" name="firstName" placeholder=" " required>
+                        <label for="reg-first-name">First Name *</label>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" id="reg-last-name" name="lastName" placeholder=" " required>
+                        <label for="reg-last-name">Last Name *</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <input type="email" id="reg-email" name="email" placeholder=" " required>
+                    <label for="reg-email">Email Address *</label>
+                    <small class="form-help">We'll send confirmation to this email</small>
+                </div>
+                <div class="form-group">
+                    <input type="password" id="reg-password" name="password" placeholder=" " required>
+                    <label for="reg-password">Password *</label>
+                    <small class="form-help">At least 8 characters with numbers and symbols</small>
+                </div>
+                <div class="form-group">
+                    <input type="password" id="reg-confirm-password" name="confirmPassword" placeholder=" " required>
+                    <label for="reg-confirm-password">Confirm Password *</label>
+                </div>
+                <div class="form-options">
+                    <label class="checkbox-container">
+                        <input type="checkbox" id="reg-terms" required>
+                        <span class="checkmark"></span>
+                        I agree to the <a href="#" style="color: #667eea;">Terms & Conditions</a>
+                    </label>
+                </div>
+                <button type="submit" class="btn-primary">
+                    <i class="fas fa-user-plus"></i> Create Account
+                </button>
+            </form>
+            <div class="login-footer">
+                <p>Already have an account? <a href="#" id="show-login">Sign In</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Application -->
+    <div id="app" class="hidden">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <button id="sidebar-toggle" class="menu-toggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="logo-section">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2991/2991112.png" alt="Blood Bank Logo" class="header-logo">
+                    <h1 class="app-title">LifeFlow Blood Bank</h1>
+                </div>
+            </div>
+            <div class="header-center">
+                <div class="header-stats">
+                    <div class="header-stat">
+                        <i class="fas fa-tint"></i>
+                        <span id="header-blood-units">1,245</span>
+                        <small>Units Available</small>
+                    </div>
+                    <div class="header-stat">
+                        <i class="fas fa-users"></i>
+                        <span id="header-active-donors">586</span>
+                        <small>Active Donors</small>
+                    </div>
+                    <div class="header-stat">
+                        <i class="fas fa-clock"></i>
+                        <span id="header-pending-requests">24</span>
+                        <small>Pending Requests</small>
+                    </div>
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="header-actions">
+                    <button class="icon-btn" title="Notifications" id="notification-btn">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge" id="notification-count">3</span>
+                    </button>
+                    <button class="icon-btn" title="Quick Actions" id="quick-actions-btn">
+                        <i class="fas fa-plus-circle"></i>
+                    </button>
+                </div>
+                <div class="user-profile">
+                    <img src="https://cdn-icons-png.flaticon.com/512/219/219986.png" alt="User" class="user-avatar" id="user-avatar">
+                    <div class="user-info">
+                        <span id="user-name">Admin</span>
+                        <small id="user-role">Administrator</small>
+                    </div>
+                    <div class="dropdown-menu">
+                        <a href="#" onclick="showSection('profile')"><i class="fas fa-user"></i> Profile</a>
+                        <a href="#" onclick="showSection('settings')"><i class="fas fa-cog"></i> Settings</a>
+                        <a href="#" onclick="showSection('dashboard')"><i class="fas fa-home"></i> Dashboard</a>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <!-- Sidebar Header -->
+            <div class="sidebar-header">
+                <div class="sidebar-logo">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2991/2991112.png" alt="LifeFlow" class="sidebar-logo-icon">
+                    <div class="sidebar-brand">
+                        <h3>LifeFlow</h3>
+                        <span>Blood Bank</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navigation Menu -->
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">Main Menu</div>
+                    <a href="#dashboard" class="nav-item active" data-section="dashboard">
+                        <div class="nav-icon">
+                            <i class="fas fa-home"></i>
+                        </div>
+                        <span class="nav-text">Dashboard</span>
+                        <div class="nav-indicator"></div>
+                    </a>
+                    <a href="#inventory" class="nav-item" data-section="inventory">
+                        <div class="nav-icon">
+                            <i class="fas fa-tint"></i>
+                        </div>
+                        <span class="nav-text">Blood Inventory</span>
+                        <div class="nav-indicator"></div>
+                    </a>
+                    <a href="#donors" class="nav-item" data-section="donors">
+                        <div class="nav-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <span class="nav-text">Donors</span>
+                        <div class="nav-indicator"></div>
+                    </a>
+                    <a href="#requests" class="nav-item" data-section="requests">
+                        <div class="nav-icon">
+                            <i class="fas fa-hand-holding-heart"></i>
+                        </div>
+                        <span class="nav-text">Requests</span>
+                        <div class="nav-indicator"></div>
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Management</div>
+                    <a href="#campaigns" class="nav-item" data-section="campaigns">
+                        <div class="nav-icon">
+                            <i class="fas fa-calendar-alt"></i>
+                        </div>
+                        <span class="nav-text">Campaigns</span>
+                        <div class="nav-indicator"></div>
+                    </a>
+                    <a href="#reports" class="nav-item" data-section="reports">
+                        <div class="nav-icon">
+                            <i class="fas fa-chart-bar"></i>
+                        </div>
+                        <span class="nav-text">Reports</span>
+                        <div class="nav-indicator"></div>
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Account</div>
+                    <a href="#profile" class="nav-item" data-section="profile">
+                        <div class="nav-icon">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <span class="nav-text">Profile</span>
+                        <div class="nav-indicator"></div>
+                    </a>
+                    <a href="#settings" class="nav-item" data-section="settings">
+                        <div class="nav-icon">
+                            <i class="fas fa-cog"></i>
+                        </div>
+                        <span class="nav-text">Settings</span>
+                        <div class="nav-indicator"></div>
+                    </a>
+                </div>
+            </nav>
+
+            <!-- System Status -->
+            <div class="sidebar-footer">
+                <div class="system-status">
+                    <div class="status-indicator online"></div>
+                    <div class="status-info">
+                        <span class="status-text">System Online</span>
+                        <span class="status-time">Last sync: 2 min ago</span>
+                    </div>
+                </div>
+
+                <!-- Quick Stats -->
+                <div class="sidebar-stats">
+                    <div class="stat-item">
+                        <span class="stat-value" id="sidebar-blood-count">1,245</span>
+                        <span class="stat-label">Units</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value" id="sidebar-donor-count">586</span>
+                        <span class="stat-label">Donors</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value" id="sidebar-request-count">24</span>
+                        <span class="stat-label">Requests</span>
+                    </div>
+                </div>
+
+                <!-- User Quick Actions -->
+                <div class="sidebar-actions">
+                    <button class="quick-action-btn" title="Add Donor" onclick="showSection('donors')">
+                        <i class="fas fa-user-plus"></i>
+                    </button>
+                    <button class="quick-action-btn" title="New Request" onclick="showSection('requests')">
+                        <i class="fas fa-plus-circle"></i>
+                    </button>
+                    <button class="quick-action-btn" title="Emergency Alert" onclick="showEmergencyModal()">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content" id="main-content">
+            <!-- Content will be loaded here dynamically -->
+        </main>
+    </div>
+
+    <!-- Blood Drop Animations -->
+    <div class="blood-drop"></div>
+    <div class="blood-drop"></div>
+    <div class="blood-drop"></div>
+    <div class="blood-drop"></div>
+    <div class="blood-drop"></div>
+    <div class="blood-drop"></div>
+    <div class="blood-drop"></div>
+    <div class="blood-drop"></div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

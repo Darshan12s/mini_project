@@ -1,0 +1,89 @@
+<section id="inventory-section" class="content-section">
+    <div class="section-header">
+        <h2>Blood Inventory</h2>
+        <p>Monitor and manage blood stock levels</p>
+    </div>
+
+    <div class="inventory-controls">
+        <button class="btn-primary" onclick="openAddInventoryModal()">
+            <i class="fas fa-plus"></i> Add Blood Units
+        </button>
+        <div class="filter-controls">
+            <select id="inventory-blood-filter" onchange="filterInventory()">
+                <option value="">All Blood Types</option>
+                <option value="A+">A+</option>
+                <option value="A-">A-</option>
+                <option value="B+">B+</option>
+                <option value="B-">B-</option>
+                <option value="AB+">AB+</option>
+                <option value="AB-">AB-</option>
+                <option value="O+">O+</option>
+                <option value="O-">O-</option>
+            </select>
+            <select id="inventory-status-filter" onchange="filterInventory()">
+                <option value="">All Statuses</option>
+                <option value="available">Available</option>
+                <option value="low">Low Stock</option>
+                <option value="critical">Critical</option>
+                <option value="expired">Expired</option>
+            </select>
+        </div>
+    </div>
+<br><br>
+    <!-- Inventory Summary Cards -->
+    <div class="inventory-summary">
+        <div class="summary-card">
+            <div class="summary-icon available">
+                <i class="fas fa-tint"></i>
+            </div>
+            <div class="summary-info">
+                <h3>Total Units</h3>
+                <span class="summary-number" id="total-units">1,245</span>
+            </div>
+        </div>
+        <div class="summary-card">
+            <div class="summary-icon low">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <div class="summary-info">
+                <h3>Low Stock</h3>
+                <span class="summary-number" id="low-stock-units">23</span>
+            </div>
+        </div>
+        <div class="summary-card">
+            <div class="summary-icon critical">
+                <i class="fas fa-exclamation-circle"></i>
+            </div>
+            <div class="summary-info">
+                <h3>Critical Stock</h3>
+                <span class="summary-number" id="critical-stock-units">5</span>
+            </div>
+        </div>
+        <div class="summary-card">
+            <div class="summary-icon expired">
+                <i class="fas fa-calendar-times"></i>
+            </div>
+            <div class="summary-info">
+                <h3>Expiring Soon</h3>
+                <span class="summary-number" id="expiring-units">12</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Blood Type</th>
+                    <th>Units Available</th>
+                    <th>Status</th>
+                    <th>Last Updated</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="inventory-table-body">
+                <!-- Inventory data will be loaded here -->
+            </tbody>
+        </table>
+    </div>
+</section>
