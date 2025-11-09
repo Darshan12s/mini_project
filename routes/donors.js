@@ -30,6 +30,7 @@ const mockDonors = [];
 
 // Get all donors
 router.get('/', authenticateToken, async (req, res) => {
+    console.log('Fetching donors from API');
     try {
         let donors = [...mockDonors];
 
@@ -63,6 +64,10 @@ router.get('/', authenticateToken, async (req, res) => {
                 .sort({ createdAt: -1 })
                 .limit(50);
 
+            console.log('Real donors found:', realDonors.length);
+            if (realDonors.length > 0) {
+                console.log('Sample populated donor:', JSON.stringify(realDonors[0], null, 2));
+            }
             if (realDonors.length > 0) {
                 donors = realDonors.map(d => ({
                     _id: d._id,
@@ -73,17 +78,22 @@ router.get('/', authenticateToken, async (req, res) => {
                     lastDonation: d.lastDonation ? d.lastDonation.toISOString().split('T')[0] : null,
                     contactInfo: d.contactInfo
                 }));
+                console.log('Mapped donors:', donors.length);
             } else {
                 // Use mock data if no database data
                 donors = [...mockDonors];
+                console.log('Using mock donors');
             }
         } catch (dbError) {
+            console.log('DB error in GET donors:', dbError.message);
             // Use mock data if database not available
             donors = [...mockDonors];
         }
 
+        console.log('Sending donors count:', donors.length);
+        console.log('Sending donors data:', JSON.stringify(donors.slice(0, 2), null, 2)); // Log first 2 donors
         res.json({
-            donors: paginatedDonors,
+            donors: donors, // Return all donors instead of paginated
             pagination: {
                 page,
                 limit,
@@ -136,8 +146,11 @@ router.post('/', authenticateToken, [
     body('bloodType').isIn(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']).withMessage('Valid blood type is required'),
     body('phone').optional().isLength({ min: 10, max: 15 }).withMessage('Phone number must be between 10-15 characters')
 ], async (req, res) => {
+    console.log('POST /api/donors - Request body:', JSON.stringify(req.body, null, 2));
+
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
+        console.log('Validation errors:', errors.array());
         return res.status(400).json({ error: errors.array()[0].msg });
     }
 
@@ -155,6 +168,7 @@ router.post('/', authenticateToken, [
                 role: 'donor'
             });
             await user.save();
+            console.log('User created:', user._id);
         }
 
         let donor = await Donor.findOne({ user: user._id });
@@ -167,6 +181,7 @@ router.post('/', authenticateToken, [
             donor.lastDonation = lastDonation ? new Date(lastDonation) : null;
             await donor.save();
             await donor.populate('user', 'firstName lastName email phone');
+            console.log('Existing donor updated:', donor._id);
         } else {
             donor = new Donor({
                 user: user._id,
@@ -179,6 +194,7 @@ router.post('/', authenticateToken, [
             });
             await donor.save();
             await donor.populate('user', 'firstName lastName email phone');
+            console.log('New donor created:', donor._id);
         }
 
         // Log activity (commented out to avoid crash)

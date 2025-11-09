@@ -369,8 +369,10 @@ function initializeDonors() {
         statusFilter.addEventListener('change', filterDonors);
     }
 
-    // Load donors data
-    loadDonors();
+    // Load donors data with a small delay to ensure DOM is ready
+    setTimeout(() => {
+        loadDonors();
+    }, 100);
 }
 
 function initializeInventory() {
@@ -509,6 +511,7 @@ async function loadDashboardData() {
 }
 
 async function loadDonors() {
+    console.log('Loading donors from frontend');
     try {
         const response = await fetch('/api/donors', {
             headers: {
@@ -516,9 +519,11 @@ async function loadDonors() {
             }
         });
 
+        console.log('Donors fetch response status:', response.status);
         if (response.ok) {
             const data = await response.json();
             const donors = data.donors || data;
+            console.log('Donors received:', donors.length);
             updateDonorsTable(donors);
         } else {
             console.error('Failed to load donors:', response.status);
@@ -585,6 +590,7 @@ async function loadInventory() {
 }
 
 async function loadRequests() {
+    console.log('Loading requests from frontend');
     try {
         const response = await fetch('/api/requests', {
             headers: {
@@ -592,8 +598,11 @@ async function loadRequests() {
             }
         });
 
+        console.log('Requests fetch response status:', response.status);
         if (response.ok) {
             const data = await response.json();
+            console.log('Requests received:', data.requests ? data.requests.length : 'No requests array');
+            console.log('Sample request data:', data.requests ? data.requests[0] : 'No data');
             updateRequestsDisplay(data);
         } else {
             console.error('Failed to load requests:', response.status);
@@ -712,8 +721,14 @@ function updateDashboardStats(data) {
 }
 
 function updateDonorsTable(donors) {
+    console.log('Updating donors table with:', donors.length, 'donors');
+    console.log('Sample donor data:', donors[0] || 'No donors');
     const tbody = document.getElementById('donor-table-body');
-    if (!tbody) return;
+    console.log('Table body element found:', !!tbody);
+    if (!tbody) {
+        console.error('Donor table body not found!');
+        return;
+    }
 
     tbody.innerHTML = donors.map(donor => {
         const fullName = donor.user ? `${donor.user.firstName} ${donor.user.lastName}` : 'N/A';
@@ -792,12 +807,32 @@ function updateInventoryDisplay(data) {
 }
 
 function updateRequestsDisplay(data) {
+    console.log('Updating requests display with data:', data);
     const tbody = document.getElementById('request-table-body');
-    if (!tbody) return;
+    console.log('Request table body element found:', !!tbody);
+    if (!tbody) {
+        console.error('Request table body not found!');
+        return;
+    }
 
     const requests = data.requests || data;
+    console.log('Processing requests array:', requests.length, 'requests');
+
+    if (!requests || requests.length === 0) {
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="8" style="text-align: center; padding: 40px; color: #64748b;">
+                    <i class="fas fa-inbox" style="font-size: 48px; color: #cbd5e1; margin-bottom: 16px; display: block;"></i>
+                    <div>No requests found</div>
+                    <small>No blood requests have been submitted yet.</small>
+                </td>
+            </tr>
+        `;
+        return;
+    }
 
     tbody.innerHTML = requests.map(request => {
+        console.log('Processing request:', request._id, request.requestId);
         const requestId = request.requestId || `REQ-${String(request._id || Math.random()).slice(-3)}`;
         const requesterType = request.institution?.type || 'Hospital';
         const requesterName = request.institution?.name || request.patient?.name || 'Unknown';
@@ -836,11 +871,95 @@ function updateRequestsDisplay(data) {
             </tr>
         `;
     }).join('');
+
+    console.log('Requests table updated successfully with', requests.length, 'rows');
 }
 
 function updateCampaignsDisplay(campaigns) {
-    // Implement campaigns display update
     console.log('Updating campaigns display:', campaigns);
+    const campaignsGrid = document.getElementById('campaigns-grid');
+    if (!campaignsGrid) {
+        console.error('Campaigns grid not found!');
+        return;
+    }
+
+    // Clear existing content
+    campaignsGrid.innerHTML = '';
+
+    // Get campaigns array (handle both {campaigns: [...]} and direct array formats)
+    const campaignsList = campaigns.campaigns || campaigns;
+
+    if (!campaignsList || campaignsList.length === 0) {
+        campaignsGrid.innerHTML = `
+            <div class="empty-state">
+                <div class="empty-state-content">
+                    <i class="fas fa-calendar-alt"></i>
+                    <h4>No Campaigns Found</h4>
+                    <p>No donation campaigns are currently available.</p>
+                    <button class="btn-primary" onclick="openAddCampaignModal()">
+                        <i class="fas fa-plus"></i> Create First Campaign
+                    </button>
+                </div>
+            </div>
+        `;
+        return;
+    }
+
+    // Render each campaign
+    campaignsList.forEach(campaign => {
+        const campaignCard = document.createElement('div');
+        campaignCard.className = 'campaign-card';
+
+        const startDate = new Date(campaign.startDate).toLocaleDateString();
+        const endDate = new Date(campaign.endDate).toLocaleDateString();
+        const progress = campaign.targetDonors > 0 ?
+            Math.round((campaign.registeredDonors / campaign.targetDonors) * 100) : 0;
+
+        campaignCard.innerHTML = `
+            <div class="campaign-header">
+                <h3>${campaign.title || 'Untitled Campaign'}</h3>
+                <span class="campaign-status status-${campaign.status || 'upcoming'}">${campaign.status || 'upcoming'}</span>
+            </div>
+            <div class="campaign-details">
+                <div class="campaign-info">
+                    <i class="fas fa-calendar"></i>
+                    <span>${startDate} - ${endDate}</span>
+                </div>
+                <div class="campaign-info">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>${campaign.location || 'Location TBD'}</span>
+                </div>
+                <div class="campaign-info">
+                    <i class="fas fa-users"></i>
+                    <span>Target: ${campaign.targetDonors || 0} donors</span>
+                </div>
+            </div>
+            <div class="campaign-stats">
+                <div class="stat">
+                    <span class="stat-number">${campaign.registeredDonors || 0}</span>
+                    <span class="stat-label">Registered</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">${campaign.successfulDonations || 0}</span>
+                    <span class="stat-label">Donated</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">${progress}%</span>
+                    <span class="stat-label">Progress</span>
+                </div>
+            </div>
+            <div class="campaign-actions">
+                <button class="btn-secondary btn-small" onclick="viewCampaign('${campaign._id}')">
+                    <i class="fas fa-eye"></i> View Details
+                </button>
+                <button class="btn-primary btn-small" onclick="editCampaign('${campaign._id}')">
+                    <i class="fas fa-edit"></i> Edit
+                </button>
+            </div>
+        `;
+
+        campaignsGrid.appendChild(campaignCard);
+    });
 }
 
 function updateReportsDisplay(reports) {
@@ -849,8 +968,65 @@ function updateReportsDisplay(reports) {
 }
 
 function updateProfileDisplay(profile) {
-    // Implement profile display update
-    console.log('Updating profile display:', profile);
+    console.log('Updating profile display with data:', profile);
+
+    if (!profile) {
+        console.error('No profile data provided');
+        return;
+    }
+
+    // Update profile header information
+    const profileName = document.getElementById('profile-name');
+    const profileEmail = document.getElementById('profile-email');
+    const profileRole = document.getElementById('profile-role');
+
+    if (profileName) {
+        profileName.textContent = `${profile.firstName || 'Unknown'} ${profile.lastName || 'User'}`;
+        console.log('Updated profile name to:', profileName.textContent);
+    }
+
+    if (profileEmail) {
+        profileEmail.textContent = profile.email || 'No email';
+        console.log('Updated profile email to:', profileEmail.textContent);
+    }
+
+    if (profileRole) {
+        const roleDisplay = profile.role === 'admin' ? 'Administrator' :
+                           profile.role === 'staff' ? 'Staff Member' : 'User';
+        profileRole.textContent = roleDisplay;
+        console.log('Updated profile role to:', profileRole.textContent);
+    }
+
+    // Update form fields
+    const editFullName = document.getElementById('edit-full-name');
+    const editEmail = document.getElementById('edit-email');
+
+    if (editFullName) {
+        editFullName.value = `${profile.firstName || ''} ${profile.lastName || ''}`.trim();
+        console.log('Updated form full name to:', editFullName.value);
+    }
+
+    if (editEmail) {
+        editEmail.value = profile.email || '';
+        console.log('Updated form email to:', editEmail.value);
+    }
+
+    // Update profile stats (mock data for now)
+    const totalDonors = document.getElementById('total-donors');
+    const totalRequests = document.getElementById('total-requests');
+    const accountAge = document.getElementById('account-age');
+
+    if (totalDonors) {
+        totalDonors.textContent = '25'; // Mock data
+    }
+    if (totalRequests) {
+        totalRequests.textContent = '12'; // Mock data
+    }
+    if (accountAge) {
+        accountAge.textContent = '45'; // Mock data - days active
+    }
+
+    console.log('Profile display update completed');
 }
 
 function updateSettingsDisplay(settings) {
@@ -1841,6 +2017,7 @@ function deleteInventory(bloodType) {
 
 // Profile Management Functions
 async function loadProfile() {
+    console.log('Loading profile from frontend');
     try {
         const response = await fetch('/api/auth/profile', {
             headers: {
@@ -1848,14 +2025,37 @@ async function loadProfile() {
             }
         });
 
+        console.log('Profile fetch response status:', response.status);
         if (response.ok) {
-            const profile = await response.json();
-            updateProfileDisplay(profile);
+            const data = await response.json();
+            console.log('Profile data received:', JSON.stringify(data, null, 2));
+            updateProfileDisplay(data.user || data);
         } else {
-            console.error('Failed to load profile');
+            console.error('Failed to load profile:', response.status);
+            // Show mock data for demo
+            const mockProfile = {
+                firstName: 'John',
+                lastName: 'Admin',
+                email: 'admin@lifeflow.com',
+                role: 'Administrator',
+                bloodType: 'O+',
+                phone: '+1-555-0123'
+            };
+            console.log('Using mock profile data');
+            updateProfileDisplay(mockProfile);
         }
     } catch (error) {
         console.error('Error loading profile:', error);
+        // Show mock data for demo
+        const mockProfile = {
+            firstName: 'John',
+            lastName: 'Admin',
+            email: 'admin@lifeflow.com',
+            role: 'Administrator',
+            bloodType: 'O+',
+            phone: '+1-555-0123'
+        };
+        updateProfileDisplay(mockProfile);
     }
 }
 

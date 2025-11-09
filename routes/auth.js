@@ -213,12 +213,43 @@ router.post('/login', [
 
 // Get current user profile
 router.get('/profile', authenticateToken, async (req, res) => {
+    console.log('GET /api/auth/profile - Fetching profile for user:', req.user.userId);
     try {
-        const user = await User.findById(req.user.userId).select('-password');
+        let user = null;
+
+        // Try to get user from database first
+        try {
+            user = await User.findById(req.user.userId).select('-password');
+            console.log('User found in database:', user ? user._id : 'Not found');
+        } catch (dbError) {
+            console.log('Database error, checking mock users:', dbError.message);
+        }
+
+        // If no user found in database, check mock users
         if (!user) {
+            const mockUser = mockUsers.find(u => u._id === req.user.userId || u.email === req.user.email);
+            if (mockUser) {
+                user = {
+                    _id: mockUser._id,
+                    firstName: mockUser.firstName,
+                    lastName: mockUser.lastName,
+                    email: mockUser.email,
+                    role: mockUser.role,
+                    bloodType: mockUser.bloodType,
+                    phone: mockUser.phone || '',
+                    createdAt: new Date(),
+                    isActive: mockUser.isActive
+                };
+                console.log('Using mock user:', user._id);
+            }
+        }
+
+        if (!user) {
+            console.log('No user found for ID:', req.user.userId);
             return res.status(404).json({ error: 'User not found' });
         }
 
+        console.log('Returning user profile:', JSON.stringify(user, null, 2));
         res.json({ user });
     } catch (error) {
         console.error('Profile fetch error:', error);
