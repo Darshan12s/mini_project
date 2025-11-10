@@ -27,14 +27,28 @@ const authenticateToken = (req, res, next) => {
 router.get('/', authenticateToken, async (req, res) => {
     console.log('GET /api/requests - Fetching all requests');
     try {
-        const requests = await Request.find({})
-            .populate('requester', 'firstName lastName')
-            .sort({ createdAt: -1 })
-            .limit(50);
+        let requests = [];
 
-        console.log(`Found ${requests.length} requests in database`);
-        if (requests.length > 0) {
-            console.log('Sample request:', JSON.stringify(requests[0], null, 2));
+        // Try to get real requests from database
+        try {
+            const dbRequests = await Request.find({})
+                .populate('requester', 'firstName lastName')
+                .sort({ createdAt: -1 })
+                .limit(50);
+
+            requests = dbRequests;
+            console.log(`Found ${requests.length} requests in database`);
+            if (requests.length > 0) {
+                console.log('Sample request:', JSON.stringify(requests[0], null, 2));
+            }
+        } catch (dbError) {
+            console.log('Database error, using mock requests:', dbError.message);
+        }
+
+        // Include mock requests if any exist
+        if (global.mockRequests && global.mockRequests.length > 0) {
+            console.log(`Adding ${global.mockRequests.length} mock requests`);
+            requests = [...global.mockRequests, ...requests];
         }
 
         res.json({ requests });
@@ -74,11 +88,16 @@ router.post('/', authenticateToken, async (req, res) => {
             return res.status(400).json({ error: 'Blood requirements are required' });
         }
 
+        // Validate that either patient or institution is provided
+        if (!patient && !institution) {
+            return res.status(400).json({ error: 'Either patient or institution information is required' });
+        }
+
         // Create request structure matching the expected format
         const requestData = {
             requester: req.user.userId, // Use the authenticated user as requester
-            patient: patient || null,
-            institution: institution || null,
+            patient: patient || undefined,
+            institution: institution || undefined,
             bloodRequirements: bloodRequirements,
             status: status || 'pending',
             priority: priority || 'medium',
@@ -124,6 +143,13 @@ router.post('/', authenticateToken, async (req, res) => {
             };
 
             console.log('Returning mock request:', JSON.stringify(mockRequest, null, 2));
+
+            // Add mock request to the requests list for immediate display
+            if (global.mockRequests) {
+                global.mockRequests.push(mockRequest);
+            } else {
+                global.mockRequests = [mockRequest];
+            }
 
             return res.status(201).json({
                 message: 'Request created successfully',

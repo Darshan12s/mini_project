@@ -216,13 +216,41 @@ router.get('/profile', authenticateToken, async (req, res) => {
     console.log('GET /api/auth/profile - Fetching profile for user:', req.user.userId);
     try {
         let user = null;
+        let stats = {
+            totalDonors: 0,
+            totalRequests: 0,
+            daysActive: 0
+        };
 
         // Try to get user from database first
         try {
             user = await User.findById(req.user.userId).select('-password');
             console.log('User found in database:', user ? user._id : 'Not found');
+
+            if (user) {
+                // Calculate stats for database user
+                const donorCount = await Donor.countDocuments({ user: user._id });
+                const requestCount = await Request.countDocuments({ requester: user._id });
+
+                // Calculate days active
+                const createdDate = new Date(user.createdAt);
+                const now = new Date();
+                const daysActive = Math.floor((now - createdDate) / (1000 * 60 * 60 * 24));
+
+                stats = {
+                    totalDonors: donorCount,
+                    totalRequests: requestCount,
+                    daysActive: daysActive
+                };
+            }
         } catch (dbError) {
             console.log('Database error, checking mock users:', dbError.message);
+            // Fallback to mock stats for demo
+            stats = {
+                totalDonors: 25,
+                totalRequests: 12,
+                daysActive: 45
+            };
         }
 
         // If no user found in database, check mock users
@@ -241,6 +269,13 @@ router.get('/profile', authenticateToken, async (req, res) => {
                     isActive: mockUser.isActive
                 };
                 console.log('Using mock user:', user._id);
+
+                // Mock stats for demo users
+                stats = {
+                    totalDonors: 25,
+                    totalRequests: 12,
+                    daysActive: 45
+                };
             }
         }
 
@@ -249,8 +284,8 @@ router.get('/profile', authenticateToken, async (req, res) => {
             return res.status(404).json({ error: 'User not found' });
         }
 
-        console.log('Returning user profile:', JSON.stringify(user, null, 2));
-        res.json({ user });
+        console.log('Returning user profile with stats:', JSON.stringify({ user, stats }, null, 2));
+        res.json({ user, stats });
     } catch (error) {
         console.error('Profile fetch error:', error);
         res.status(500).json({ error: 'Failed to fetch profile' });

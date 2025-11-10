@@ -28,87 +28,187 @@
     </div>
 
     <div class="reports-grid">
-        <div class="report-card">
+        <div class="report-card report-card-primary">
             <div class="report-header">
-                <h3>Donor Statistics</h3>
-                <span class="report-period">Last 30 days</span>
+                <div class="report-icon">
+                    <i class="fas fa-user-plus"></i>
+                </div>
+                <div class="report-info">
+                    <h3>Donor Statistics</h3>
+                    <span class="report-period">Last 30 days</span>
+                </div>
             </div>
             <div class="report-metrics">
                 <div class="metric">
-                    <span class="metric-value">3</span>
-                    <span class="metric-label">New Donors</span>
+                    <div class="metric-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="metric-content">
+                        <span class="metric-value" id="donor-new-count">3</span>
+                        <span class="metric-label">New Donors</span>
+                    </div>
                 </div>
                 <div class="metric">
-                    <span class="metric-value">89</span>
-                    <span class="metric-label">Total Donations</span>
+                    <div class="metric-icon">
+                        <i class="fas fa-tint"></i>
+                    </div>
+                    <div class="metric-content">
+                        <span class="metric-value" id="donor-total-donations">89</span>
+                        <span class="metric-label">Total Donations</span>
+                    </div>
                 </div>
                 <div class="metric">
-                    <span class="metric-value">95%</span>
-                    <span class="metric-label">Eligibility Rate</span>
+                    <div class="metric-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="metric-content">
+                        <span class="metric-value" id="donor-eligibility-rate">95%</span>
+                        <span class="metric-label">Eligibility Rate</span>
+                    </div>
                 </div>
+            </div>
+            <div class="report-actions">
+                <button class="btn-secondary btn-small" onclick="viewDonorReport()">
+                    <i class="fas fa-eye"></i> View Details
+                </button>
             </div>
         </div>
 
-        <div class="report-card">
+        <div class="report-card report-card-success">
             <div class="report-header">
-                <h3>Blood Inventory</h3>
-                <span class="report-period">Current Status</span>
+                <div class="report-icon">
+                    <i class="fas fa-boxes"></i>
+                </div>
+                <div class="report-info">
+                    <h3>Blood Inventory</h3>
+                    <span class="report-period">Current Status</span>
+                </div>
             </div>
             <div class="report-metrics">
                 <div class="metric">
-                    <span class="metric-value">149</span>
-                    <span class="metric-label">Total Units</span>
+                    <div class="metric-icon">
+                        <i class="fas fa-cubes"></i>
+                    </div>
+                    <div class="metric-content">
+                        <span class="metric-value" id="inventory-total-units">149</span>
+                        <span class="metric-label">Total Units</span>
+                    </div>
                 </div>
                 <div class="metric">
-                    <span class="metric-value">40</span>
-                    <span class="metric-label">Low Stock</span>
+                    <div class="metric-icon">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <div class="metric-content">
+                        <span class="metric-value" id="inventory-low-stock">40</span>
+                        <span class="metric-label">Low Stock</span>
+                    </div>
                 </div>
                 <div class="metric">
-                    <span class="metric-value">8</span>
-                    <span class="metric-label">Expiring Soon</span>
+                    <div class="metric-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="metric-content">
+                        <span class="metric-value" id="inventory-expiring">8</span>
+                        <span class="metric-label">Expiring Soon</span>
+                    </div>
                 </div>
+            </div>
+            <div class="report-actions">
+                <button class="btn-secondary btn-small" onclick="viewInventoryReport()">
+                    <i class="fas fa-eye"></i> View Details
+                </button>
             </div>
         </div>
 
-        <div class="report-card">
+        <div class="report-card report-card-warning">
             <div class="report-header">
-                <h3>Blood Requests</h3>
-                <span class="report-period">Last 30 days</span>
+                <div class="report-icon">
+                    <i class="fas fa-hand-holding-heart"></i>
+                </div>
+                <div class="report-info">
+                    <h3>Blood Requests</h3>
+                    <span class="report-period">Last 30 days</span>
+                </div>
             </div>
             <div class="report-metrics">
                 <div class="metric">
-                    <span class="metric-value">6</span>
-                    <span class="metric-label">Total Requests</span>
+                    <div class="metric-icon">
+                        <i class="fas fa-clipboard-list"></i>
+                    </div>
+                    <div class="metric-content">
+                        <span class="metric-value" id="requests-total">6</span>
+                        <span class="metric-label">Total Requests</span>
+                    </div>
                 </div>
                 <div class="metric">
-                    <span class="metric-value">4</span>
-                    <span class="metric-label">Approved</span>
+                    <div class="metric-icon">
+                        <i class="fas fa-check"></i>
+                    </div>
+                    <div class="metric-content">
+                        <span class="metric-value" id="requests-approved">4</span>
+                        <span class="metric-label">Approved</span>
+                    </div>
                 </div>
                 <div class="metric">
-                    <span class="metric-value">2</span>
-                    <span class="metric-label">Pending</span>
+                    <div class="metric-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="metric-content">
+                        <span class="metric-value" id="requests-pending">2</span>
+                        <span class="metric-label">Pending</span>
+                    </div>
                 </div>
+            </div>
+            <div class="report-actions">
+                <button class="btn-secondary btn-small" onclick="viewRequestsReport()">
+                    <i class="fas fa-eye"></i> View Details
+                </button>
             </div>
         </div>
 
-        <div class="report-card">
+        <div class="report-card report-card-info">
             <div class="report-header">
-                <h3>Campaign Performance</h3>
-                <span class="report-period">Last 90 days</span>
+                <div class="report-icon">
+                    <i class="fas fa-calendar-alt"></i>
+                </div>
+                <div class="report-info">
+                    <h3>Campaign Performance</h3>
+                    <span class="report-period">Last 90 days</span>
+                </div>
             </div>
             <div class="report-metrics">
                 <div class="metric">
-                    <span class="metric-value">3</span>
-                    <span class="metric-label">Active Campaigns</span>
+                    <div class="metric-icon">
+                        <i class="fas fa-bullhorn"></i>
+                    </div>
+                    <div class="metric-content">
+                        <span class="metric-value" id="campaigns-active">3</span>
+                        <span class="metric-label">Active Campaigns</span>
+                    </div>
                 </div>
                 <div class="metric">
-                    <span class="metric-value">307</span>
-                    <span class="metric-label">Total Registrations</span>
+                    <div class="metric-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="metric-content">
+                        <span class="metric-value" id="campaigns-registrations">307</span>
+                        <span class="metric-label">Total Registrations</span>
+                    </div>
                 </div>
                 <div class="metric">
-                    <span class="metric-value">176</span>
-                    <span class="metric-label">Successful Donations</span>
+                    <div class="metric-icon">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <div class="metric-content">
+                        <span class="metric-value" id="campaigns-donations">176</span>
+                        <span class="metric-label">Successful Donations</span>
+                    </div>
                 </div>
+            </div>
+            <div class="report-actions">
+                <button class="btn-secondary btn-small" onclick="viewCampaignsReport()">
+                    <i class="fas fa-eye"></i> View Details
+                </button>
             </div>
         </div>
     </div>

@@ -7,7 +7,7 @@
     <div class="campaign-controls">
         <button class="btn-primary" onclick="openAddCampaignModal()">
             <i class="fas fa-plus"></i> Create Campaign
-        </button>
+        </button><br><br>
         <div class="filter-controls">
             <select id="campaign-status-filter" onchange="filterCampaigns()">
                 <option value="">All Statuses</option>
@@ -23,134 +23,187 @@
         </div>
     </div>
 
-    <div class="campaigns-grid" id="campaigns-grid">
-        <div class="campaign-card">
-            <div class="campaign-header">
-                <h3>City Center Blood Drive</h3>
-                <span class="campaign-status status-active">Active</span>
-            </div>
-            <div class="campaign-details">
-                <div class="campaign-info">
-                    <i class="fas fa-calendar"></i>
-                    <span>Dec 15, 2024 - Dec 20, 2024</span>
-                </div>
-                <div class="campaign-info">
-                    <i class="fas fa-map-marker-alt"></i>
-                    <span>City Convention Center</span>
-                </div>
-                <div class="campaign-info">
-                    <i class="fas fa-users"></i>
-                    <span>Target: 200 donors</span>
-                </div>
-            </div>
-            <div class="campaign-stats">
-                <div class="stat">
-                    <span class="stat-number">145</span>
-                    <span class="stat-label">Registered</span>
-                </div>
-                <div class="stat">
-                    <span class="stat-number">89</span>
-                    <span class="stat-label">Donated</span>
-                </div>
-                <div class="stat">
-                    <span class="stat-number">72%</span>
-                    <span class="stat-label">Progress</span>
-                </div>
-            </div>
-            <div class="campaign-actions">
-                <button class="btn-secondary btn-small" onclick="viewCampaign('507f1f77bcf86cd799439019')">
-                    <i class="fas fa-eye"></i> View Details
+    <div class="campaigns-table-container">
+        <div class="table-header">
+            <h3>Campaign Management</h3>
+            <div class="table-actions">
+                <button class="btn-secondary" onclick="refreshCampaigns()">
+                    <i class="fas fa-sync"></i> Refresh
                 </button>
-                <button class="btn-primary btn-small" onclick="editCampaign('507f1f77bcf86cd799439019')">
-                    <i class="fas fa-edit"></i> Edit
+                <button class="btn-primary" onclick="openAddCampaignModal()">
+                    <i class="fas fa-plus"></i> Create Campaign
                 </button>
             </div>
         </div>
 
-        <div class="campaign-card">
-            <div class="campaign-header">
-                <h3>University Campus Drive</h3>
-                <span class="campaign-status status-upcoming">Upcoming</span>
-            </div>
-            <div class="campaign-details">
-                <div class="campaign-info">
-                    <i class="fas fa-calendar"></i>
-                    <span>Jan 10, 2025 - Jan 12, 2025</span>
-                </div>
-                <div class="campaign-info">
-                    <i class="fas fa-map-marker-alt"></i>
-                    <span>State University Campus</span>
-                </div>
-                <div class="campaign-info">
-                    <i class="fas fa-users"></i>
-                    <span>Target: 150 donors</span>
-                </div>
-            </div>
-            <div class="campaign-stats">
-                <div class="stat">
-                    <span class="stat-number">67</span>
-                    <span class="stat-label">Registered</span>
-                </div>
-                <div class="stat">
-                    <span class="stat-number">0</span>
-                    <span class="stat-label">Donated</span>
-                </div>
-                <div class="stat">
-                    <span class="stat-number">45%</span>
-                    <span class="stat-label">Progress</span>
-                </div>
-            </div>
-            <div class="campaign-actions">
-                <button class="btn-secondary btn-small" onclick="viewCampaign('507f1f77bcf86cd799439020')">
-                    <i class="fas fa-eye"></i> View Details
-                </button>
-                <button class="btn-primary btn-small" onclick="editCampaign('507f1f77bcf86cd799439020')">
-                    <i class="fas fa-edit"></i> Edit
-                </button>
-            </div>
-        </div>
-
-        <div class="campaign-card">
-            <div class="campaign-header">
-                <h3>Corporate Blood Drive</h3>
-                <span class="campaign-status status-completed">Completed</span>
-            </div>
-            <div class="campaign-details">
-                <div class="campaign-info">
-                    <i class="fas fa-calendar"></i>
-                    <span>Nov 1, 2024 - Nov 3, 2024</span>
-                </div>
-                <div class="campaign-info">
-                    <i class="fas fa-map-marker-alt"></i>
-                    <span>Tech Corp Headquarters</span>
-                </div>
-                <div class="campaign-info">
-                    <i class="fas fa-users"></i>
-                    <span>Target: 100 donors</span>
-                </div>
-            </div>
-            <div class="campaign-stats">
-                <div class="stat">
-                    <span class="stat-number">95</span>
-                    <span class="stat-label">Registered</span>
-                </div>
-                <div class="stat">
-                    <span class="stat-number">87</span>
-                    <span class="stat-label">Donated</span>
-                </div>
-                <div class="stat">
-                    <span class="stat-number">87%</span>
-                    <span class="stat-label">Progress</span>
-                </div>
-            </div>
-            <div class="campaign-actions">
-                <button class="btn-secondary btn-small" onclick="viewCampaign('507f1f77bcf86cd799439021')">
-                    <i class="fas fa-eye"></i> View Details
-                </button>
-                <button class="btn-primary btn-small" onclick="editCampaign('507f1f77bcf86cd799439021')">
-                    <i class="fas fa-edit"></i> Edit
-                </button>
-            </div>
+        <div class="table-responsive">
+            <table class="data-table campaigns-table" id="campaigns-table">
+                <thead>
+                    <tr>
+                        <th>Campaign Name</th>
+                        <th>Status</th>
+                        <th>Date Range</th>
+                        <th>Location</th>
+                        <th>Target</th>
+                        <th>Registered</th>
+                        <th>Donated</th>
+                        <th>Progress</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="campaigns-table-body">
+                    <tr>
+                        <td>
+                            <div class="campaign-title-cell">
+                                <div class="campaign-icon">
+                                    <i class="fas fa-tint"></i>
+                                </div>
+                                <div class="campaign-title-info">
+                                    <strong>City Center Blood Drive</strong>
+                                    <small>Annual community drive</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td><span class="status-badge status-active">Active</span></td>
+                        <td>
+                            <div class="date-range">
+                                <i class="fas fa-calendar"></i>
+                                Dec 15 - Dec 20, 2024
+                            </div>
+                        </td>
+                        <td>
+                            <div class="location-cell">
+                                <i class="fas fa-map-marker-alt"></i>
+                                City Convention Center
+                            </div>
+                        </td>
+                        <td><strong>200</strong> donors</td>
+                        <td><span class="registered-count">145</span></td>
+                        <td><span class="donated-count">89</span></td>
+                        <td>
+                            <div class="progress-cell">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 72%"></div>
+                                </div>
+                                <span class="progress-text">72%</span>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn-icon btn-view" onclick="viewCampaign('507f1f77bcf86cd799439019')" title="View Details">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="btn-icon btn-edit" onclick="editCampaign('507f1f77bcf86cd799439019')" title="Edit Campaign">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn-icon btn-delete" onclick="deleteCampaign('507f1f77bcf86cd799439019')" title="Delete Campaign">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="campaign-title-cell">
+                                <div class="campaign-icon">
+                                    <i class="fas fa-graduation-cap"></i>
+                                </div>
+                                <div class="campaign-title-info">
+                                    <strong>University Campus Drive</strong>
+                                    <small>Student community event</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td><span class="status-badge status-upcoming">Upcoming</span></td>
+                        <td>
+                            <div class="date-range">
+                                <i class="fas fa-calendar"></i>
+                                Jan 10 - Jan 12, 2025
+                            </div>
+                        </td>
+                        <td>
+                            <div class="location-cell">
+                                <i class="fas fa-map-marker-alt"></i>
+                                State University Campus
+                            </div>
+                        </td>
+                        <td><strong>150</strong> donors</td>
+                        <td><span class="registered-count">67</span></td>
+                        <td><span class="donated-count">0</span></td>
+                        <td>
+                            <div class="progress-cell">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 45%"></div>
+                                </div>
+                                <span class="progress-text">45%</span>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn-icon btn-view" onclick="viewCampaign('507f1f77bcf86cd799439020')" title="View Details">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="btn-icon btn-edit" onclick="editCampaign('507f1f77bcf86cd799439020')" title="Edit Campaign">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn-icon btn-delete" onclick="deleteCampaign('507f1f77bcf86cd799439020')" title="Delete Campaign">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="campaign-title-cell">
+                                <div class="campaign-icon">
+                                    <i class="fas fa-building"></i>
+                                </div>
+                                <div class="campaign-title-info">
+                                    <strong>Corporate Blood Drive</strong>
+                                    <small>Corporate partnership event</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td><span class="status-badge status-completed">Completed</span></td>
+                        <td>
+                            <div class="date-range">
+                                <i class="fas fa-calendar"></i>
+                                Nov 1 - Nov 3, 2024
+                            </div>
+                        </td>
+                        <td>
+                            <div class="location-cell">
+                                <i class="fas fa-map-marker-alt"></i>
+                                Tech Corp Headquarters
+                            </div>
+                        </td>
+                        <td><strong>100</strong> donors</td>
+                        <td><span class="registered-count">95</span></td>
+                        <td><span class="donated-count">87</span></td>
+                        <td>
+                            <div class="progress-cell">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 87%"></div>
+                                </div>
+                                <span class="progress-text">87%</span>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn-icon btn-view" onclick="viewCampaign('507f1f77bcf86cd799439021')" title="View Details">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="btn-icon btn-edit" onclick="editCampaign('507f1f77bcf86cd799439021')" title="Edit Campaign">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn-icon btn-delete" onclick="deleteCampaign('507f1f77bcf86cd799439021')" title="Delete Campaign">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 

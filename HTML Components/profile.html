@@ -55,11 +55,12 @@
                 <form id="profile-form">
                     <div class="form-group">
                         <label for="edit-full-name">Full Name</label>
-                        <input type="text" id="edit-full-name" required>
+                        <input type="text" id="edit-full-name" placeholder="Enter your full name" required>
+                        <small class="form-help">Your first and last name</small>
                     </div>
                     <div class="form-group">
                         <label for="edit-email">Email Address</label>
-                        <input type="email" id="edit-email" readonly>
+                        <input type="email" id="edit-email" placeholder="your.email@example.com" readonly>
                         <small class="form-help">Email cannot be changed</small>
                     </div>
                     <button type="submit" class="btn-primary">Update Profile</button>
@@ -71,15 +72,17 @@
                 <form id="password-form">
                     <div class="form-group">
                         <label for="current-password">Current Password</label>
-                        <input type="password" id="current-password" required>
+                        <input type="password" id="current-password" placeholder="Enter your current password" required>
                     </div>
                     <div class="form-group">
                         <label for="new-password">New Password</label>
-                        <input type="password" id="new-password" required minlength="6">
+                        <input type="password" id="new-password" placeholder="Enter a new password (min. 6 characters)" required minlength="6">
+                        <small class="form-help">Password must be at least 6 characters long</small>
                     </div>
                     <div class="form-group">
                         <label for="confirm-password">Confirm New Password</label>
-                        <input type="password" id="confirm-password" required minlength="6">
+                        <input type="password" id="confirm-password" placeholder="Re-enter your new password" required minlength="6">
+                        <small class="form-help">Re-enter your new password to confirm</small>
                     </div>
                     <button type="submit" class="btn-primary">Change Password</button>
                 </form>

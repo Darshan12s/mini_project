@@ -5,86 +5,201 @@
     </div>
 
     <div class="inventory-controls">
-        <button class="btn-primary" onclick="openAddInventoryModal()">
-            <i class="fas fa-plus"></i> Add Blood Units
-        </button>
-        <br><br>
-        <div class="filter-controls">
-            <select id="inventory-blood-filter" onchange="filterInventory()">
-                <option value="">All Blood Types</option>
-                <option value="A+">A+</option>
-                <option value="A-">A-</option>
-                <option value="B+">B+</option>
-                <option value="B-">B-</option>
-                <option value="AB+">AB+</option>
-                <option value="AB-">AB-</option>
-                <option value="O+">O+</option>
-                <option value="O-">O-</option>
-            </select>
-            <select id="inventory-status-filter" onchange="filterInventory()">
-                <option value="">All Statuses</option>
-                <option value="available">Available</option>
-                <option value="low">Low Stock</option>
-                <option value="critical">Critical</option>
-                <option value="expired">Expired</option>
-            </select>
+        <div class="control-group">
+            <div class="primary-actions">
+                <button class="btn-primary btn-large" onclick="openAddInventoryModal()">
+                    <i class="fas fa-plus"></i> Add Blood Units
+                </button>
+                <button class="btn-secondary btn-large" onclick="refreshInventory()">
+                    <i class="fas fa-sync"></i> Refresh Data
+                </button>
+            </div>
+            <div class="filter-section">
+                <div class="filter-controls">
+                    <div class="filter-group">
+                        <label for="inventory-blood-filter">
+                            <i class="fas fa-tint"></i> Blood Type
+                        </label>
+                        <select id="inventory-blood-filter" onchange="filterInventory()">
+                            <option value="">All Blood Types</option>
+                            <option value="A+">A+ (Universal Recipient)</option>
+                            <option value="A-">A-</option>
+                            <option value="B+">B+</option>
+                            <option value="B-">B-</option>
+                            <option value="AB+">AB+ (Universal Recipient)</option>
+                            <option value="AB-">AB- (Universal Donor)</option>
+                            <option value="O+">O+ (Universal Donor)</option>
+                            <option value="O-">O- (Universal Donor)</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="inventory-status-filter">
+                            <i class="fas fa-info-circle"></i> Status
+                        </label>
+                        <select id="inventory-status-filter" onchange="filterInventory()">
+                            <option value="">All Statuses</option>
+                            <option value="available">Available</option>
+                            <option value="low">Low Stock</option>
+                            <option value="critical">Critical</option>
+                            <option value="expired">Expired</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="search-controls">
+                    <div class="search-box">
+                        <input type="text" id="inventory-search" placeholder="Search inventory..." onkeyup="searchInventory()">
+                        <button onclick="searchInventory()"><i class="fas fa-search"></i></button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-<br><br>
     <!-- Inventory Summary Cards -->
     <div class="inventory-summary">
-        <div class="summary-card">
-            <div class="summary-icon available">
-                <i class="fas fa-tint"></i>
+        <div class="summary-card summary-card-primary">
+            <div class="summary-header">
+                <div class="summary-icon available">
+                    <i class="fas fa-tint"></i>
+                </div>
+                <div class="summary-trend">
+                    <i class="fas fa-arrow-up"></i>
+                    <span>+5%</span>
+                </div>
             </div>
             <div class="summary-info">
                 <h3>Total Units</h3>
                 <span class="summary-number" id="total-units">1,245</span>
+                <span class="summary-subtitle">Available for transfusion</span>
             </div>
         </div>
-        <div class="summary-card">
-            <div class="summary-icon low">
-                <i class="fas fa-exclamation-triangle"></i>
+        <div class="summary-card summary-card-warning">
+            <div class="summary-header">
+                <div class="summary-icon low">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <div class="summary-trend">
+                    <i class="fas fa-arrow-down"></i>
+                    <span>-2%</span>
+                </div>
             </div>
             <div class="summary-info">
                 <h3>Low Stock</h3>
                 <span class="summary-number" id="low-stock-units">23</span>
+                <span class="summary-subtitle">Needs attention</span>
             </div>
         </div>
-        <div class="summary-card">
-            <div class="summary-icon critical">
-                <i class="fas fa-exclamation-circle"></i>
+        <div class="summary-card summary-card-danger">
+            <div class="summary-header">
+                <div class="summary-icon critical">
+                    <i class="fas fa-exclamation-circle"></i>
+                </div>
+                <div class="summary-trend">
+                    <i class="fas fa-arrow-up"></i>
+                    <span>+1</span>
+                </div>
             </div>
             <div class="summary-info">
                 <h3>Critical Stock</h3>
                 <span class="summary-number" id="critical-stock-units">5</span>
+                <span class="summary-subtitle">Urgent restocking needed</span>
             </div>
         </div>
-        <div class="summary-card">
-            <div class="summary-icon expired">
-                <i class="fas fa-calendar-times"></i>
+        <div class="summary-card summary-card-info">
+            <div class="summary-header">
+                <div class="summary-icon expired">
+                    <i class="fas fa-calendar-times"></i>
+                </div>
+                <div class="summary-trend">
+                    <i class="fas fa-clock"></i>
+                    <span>7 days</span>
+                </div>
             </div>
             <div class="summary-info">
                 <h3>Expiring Soon</h3>
                 <span class="summary-number" id="expiring-units">12</span>
+                <span class="summary-subtitle">Monitor closely</span>
             </div>
         </div>
     </div>
 
-    <div class="table-responsive">
-        <table class="data-table">
-            <thead>
-                <tr>
-                    <th>Blood Type</th>
-                    <th>Units Available</th>
-                    <th>Status</th>
-                    <th>Last Updated</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody id="inventory-table-body">
-                <!-- Inventory data will be loaded here -->
-            </tbody>
-        </table>
+    <div class="inventory-data-table">
+        <div class="table-header">
+            <h3>Blood Stock Details</h3>
+            <div class="table-actions">
+                <button class="btn-secondary" onclick="refreshInventory()">
+                    <i class="fas fa-sync"></i> Refresh
+                </button>
+                <button class="btn-primary" onclick="openAddInventoryModal()">
+                    <i class="fas fa-plus"></i> Add Units
+                </button>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="data-table inventory-table">
+                <thead>
+                    <tr>
+                        <th>
+                            <div class="header-cell">
+                                <i class="fas fa-tint"></i>
+                                <span>Blood Type</span>
+                            </div>
+                        </th>
+                        <th>
+                            <div class="header-cell">
+                                <i class="fas fa-cubes"></i>
+                                <span>Units Available</span>
+                            </div>
+                        </th>
+                        <th>
+                            <div class="header-cell">
+                                <i class="fas fa-info-circle"></i>
+                                <span>Status</span>
+                            </div>
+                        </th>
+                        <th>
+                            <div class="header-cell">
+                                <i class="fas fa-clock"></i>
+                                <span>Last Updated</span>
+                            </div>
+                        </th>
+                        <th>
+                            <div class="header-cell">
+                                <i class="fas fa-cogs"></i>
+                                <span>Actions</span>
+                            </div>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody id="inventory-table-body">
+                    <!-- Inventory data will be loaded here -->
+                </tbody>
+            </table>
+        </div>
+
+        <div class="table-footer">
+            <div class="table-info">
+                <i class="fas fa-info-circle"></i>
+                <span>Showing current blood inventory levels. Use filters to view specific blood types.</span>
+            </div>
+            <div class="table-stats">
+                <div class="stat-item">
+                    <span class="stat-label">Last Updated:</span>
+                    <span class="stat-value" id="last-inventory-update">Just now</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Total Types:</span>
+                    <span class="stat-value" id="total-blood-types">8</span>
+                </div>
+            </div>
+            <div class="export-actions">
+                <button class="btn-secondary" onclick="exportInventory()">
+                    <i class="fas fa-download"></i> Export Data
+                </button>
+                <button class="btn-secondary" onclick="toggleTableView()">
+                    <i class="fas fa-table"></i> Toggle View
+                </button>
+            </div>
+        </div>
     </div>
 </section>

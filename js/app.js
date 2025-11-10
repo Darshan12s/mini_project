@@ -877,94 +877,191 @@ function updateRequestsDisplay(data) {
 
 function updateCampaignsDisplay(campaigns) {
     console.log('Updating campaigns display:', campaigns);
-    const campaignsGrid = document.getElementById('campaigns-grid');
-    if (!campaignsGrid) {
-        console.error('Campaigns grid not found!');
+    const campaignsTableBody = document.getElementById('campaigns-table-body');
+    if (!campaignsTableBody) {
+        console.error('Campaigns table body not found!');
         return;
     }
-
-    // Clear existing content
-    campaignsGrid.innerHTML = '';
 
     // Get campaigns array (handle both {campaigns: [...]} and direct array formats)
     const campaignsList = campaigns.campaigns || campaigns;
 
     if (!campaignsList || campaignsList.length === 0) {
-        campaignsGrid.innerHTML = `
-            <div class="empty-state">
-                <div class="empty-state-content">
-                    <i class="fas fa-calendar-alt"></i>
-                    <h4>No Campaigns Found</h4>
-                    <p>No donation campaigns are currently available.</p>
-                    <button class="btn-primary" onclick="openAddCampaignModal()">
-                        <i class="fas fa-plus"></i> Create First Campaign
-                    </button>
-                </div>
-            </div>
+        campaignsTableBody.innerHTML = `
+            <tr>
+                <td colspan="9" style="text-align: center; padding: 40px; color: #64748b;">
+                    <i class="fas fa-calendar-alt" style="font-size: 48px; color: #cbd5e1; margin-bottom: 16px; display: block;"></i>
+                    <div>No campaigns found</div>
+                    <small>No donation campaigns have been created yet.</small>
+                </td>
+            </tr>
         `;
         return;
     }
 
-    // Render each campaign
-    campaignsList.forEach(campaign => {
-        const campaignCard = document.createElement('div');
-        campaignCard.className = 'campaign-card';
-
+    // Render each campaign as table rows
+    campaignsTableBody.innerHTML = campaignsList.map(campaign => {
         const startDate = new Date(campaign.startDate).toLocaleDateString();
         const endDate = new Date(campaign.endDate).toLocaleDateString();
         const progress = campaign.targetDonors > 0 ?
             Math.round((campaign.registeredDonors / campaign.targetDonors) * 100) : 0;
+        const status = campaign.status || 'upcoming';
 
-        campaignCard.innerHTML = `
-            <div class="campaign-header">
-                <h3>${campaign.title || 'Untitled Campaign'}</h3>
-                <span class="campaign-status status-${campaign.status || 'upcoming'}">${campaign.status || 'upcoming'}</span>
-            </div>
-            <div class="campaign-details">
-                <div class="campaign-info">
-                    <i class="fas fa-calendar"></i>
-                    <span>${startDate} - ${endDate}</span>
-                </div>
-                <div class="campaign-info">
-                    <i class="fas fa-map-marker-alt"></i>
-                    <span>${campaign.location || 'Location TBD'}</span>
-                </div>
-                <div class="campaign-info">
-                    <i class="fas fa-users"></i>
-                    <span>Target: ${campaign.targetDonors || 0} donors</span>
-                </div>
-            </div>
-            <div class="campaign-stats">
-                <div class="stat">
-                    <span class="stat-number">${campaign.registeredDonors || 0}</span>
-                    <span class="stat-label">Registered</span>
-                </div>
-                <div class="stat">
-                    <span class="stat-number">${campaign.successfulDonations || 0}</span>
-                    <span class="stat-label">Donated</span>
-                </div>
-                <div class="stat">
-                    <span class="stat-number">${progress}%</span>
-                    <span class="stat-label">Progress</span>
-                </div>
-            </div>
-            <div class="campaign-actions">
-                <button class="btn-secondary btn-small" onclick="viewCampaign('${campaign._id}')">
-                    <i class="fas fa-eye"></i> View Details
-                </button>
-                <button class="btn-primary btn-small" onclick="editCampaign('${campaign._id}')">
-                    <i class="fas fa-edit"></i> Edit
-                </button>
-            </div>
+        return `
+            <tr data-campaign-id="${campaign._id}">
+                <td>
+                    <div class="campaign-title-cell">
+                        <div class="campaign-icon">
+                            <i class="fas fa-tint"></i>
+                        </div>
+                        <div class="campaign-title-info">
+                            <strong>${campaign.title || 'Untitled Campaign'}</strong>
+                            <small>${campaign.description || 'No description'}</small>
+                        </div>
+                    </div>
+                </td>
+                <td><span class="status-badge status-${status}">${status.charAt(0).toUpperCase() + status.slice(1)}</span></td>
+                <td>
+                    <div class="date-range">
+                        <i class="fas fa-calendar"></i>
+                        ${startDate} - ${endDate}
+                    </div>
+                </td>
+                <td>
+                    <div class="location-cell">
+                        <i class="fas fa-map-marker-alt"></i>
+                        ${campaign.location || 'Location TBD'}
+                    </div>
+                </td>
+                <td><strong>${campaign.targetDonors || 0}</strong> donors</td>
+                <td><span class="registered-count">${campaign.registeredDonors || 0}</span></td>
+                <td><span class="donated-count">${campaign.successfulDonations || 0}</span></td>
+                <td>
+                    <div class="progress-cell">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${progress}%"></div>
+                        </div>
+                        <span class="progress-text">${progress}%</span>
+                    </div>
+                </td>
+                <td>
+                    <div class="action-buttons">
+                        <button class="btn-icon btn-view" onclick="viewCampaign('${campaign._id}')" title="View Details">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button class="btn-icon btn-edit" onclick="editCampaign('${campaign._id}')" title="Edit Campaign">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn-icon btn-delete" onclick="deleteCampaign('${campaign._id}')" title="Delete Campaign">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </td>
+            </tr>
         `;
-
-        campaignsGrid.appendChild(campaignCard);
-    });
+    }).join('');
 }
 
 function updateReportsDisplay(reports) {
-    // Implement reports display update
-    console.log('Updating reports display:', reports);
+    console.log('Updating reports display with data:', reports);
+
+    // Update report metrics with real data if available
+    if (reports && reports.summary) {
+        const summary = reports.summary;
+
+        // Update donor metrics
+        if (summary.donors) {
+            document.getElementById('donor-new-count').textContent = summary.donors.new || 0;
+            document.getElementById('donor-total-donations').textContent = summary.donors.total || 0;
+            document.getElementById('donor-eligibility-rate').textContent = summary.donors.eligibilityRate || '0%';
+        }
+
+        // Update inventory metrics
+        if (summary.inventory) {
+            document.getElementById('inventory-total-units').textContent = summary.inventory.total || 0;
+            document.getElementById('inventory-low-stock').textContent = summary.inventory.lowStock || 0;
+            document.getElementById('inventory-expiring').textContent = summary.inventory.expiring || 0;
+        }
+
+        // Update request metrics
+        if (summary.requests) {
+            document.getElementById('requests-total').textContent = summary.requests.total || 0;
+            document.getElementById('requests-approved').textContent = summary.requests.approved || 0;
+            document.getElementById('requests-pending').textContent = summary.requests.pending || 0;
+        }
+
+        // Update campaign metrics
+        if (summary.campaigns) {
+            document.getElementById('campaigns-active').textContent = summary.campaigns.active || 0;
+            document.getElementById('campaigns-registrations').textContent = summary.campaigns.registrations || 0;
+            document.getElementById('campaigns-donations').textContent = summary.campaigns.donations || 0;
+        }
+    }
+
+    // Update charts if Chart.js is available
+    if (typeof Chart !== 'undefined') {
+        updateReportCharts(reports);
+    }
+}
+
+function updateReportCharts(reports) {
+    // Update blood type distribution chart
+    if (reports && reports.bloodTypeDistribution) {
+        const bloodTypeCtx = document.getElementById('bloodTypeChart');
+        if (bloodTypeCtx) {
+            const distribution = reports.bloodTypeDistribution;
+            new Chart(bloodTypeCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: distribution.map(item => item._id),
+                    datasets: [{
+                        data: distribution.map(item => item.count),
+                        backgroundColor: [
+                            '#e74c3c', '#3498db', '#27ae60', '#f39c12',
+                            '#9b59b6', '#1abc9c', '#34495e', '#e67e22'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+        }
+    }
+
+    // Update donation trends chart
+    if (reports && reports.donationTrends) {
+        const trendCtx = document.getElementById('donationTrendChart');
+        if (trendCtx) {
+            const trends = reports.donationTrends;
+            new Chart(trendCtx, {
+                type: 'line',
+                data: {
+                    labels: trends.map(item => `${item._id.month}/${item._id.year}`),
+                    datasets: [{
+                        label: 'Donations',
+                        data: trends.map(item => item.count),
+                        borderColor: '#667eea',
+                        backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+    }
 }
 
 function updateProfileDisplay(profile) {
@@ -2029,7 +2126,7 @@ async function loadProfile() {
         if (response.ok) {
             const data = await response.json();
             console.log('Profile data received:', JSON.stringify(data, null, 2));
-            updateProfileDisplay(data.user || data);
+            updateProfileDisplay(data.user || data, data.stats);
         } else {
             console.error('Failed to load profile:', response.status);
             // Show mock data for demo
@@ -2041,8 +2138,13 @@ async function loadProfile() {
                 bloodType: 'O+',
                 phone: '+1-555-0123'
             };
+            const mockStats = {
+                totalDonors: 25,
+                totalRequests: 12,
+                daysActive: 45
+            };
             console.log('Using mock profile data');
-            updateProfileDisplay(mockProfile);
+            updateProfileDisplay(mockProfile, mockStats);
         }
     } catch (error) {
         console.error('Error loading profile:', error);
@@ -2055,11 +2157,16 @@ async function loadProfile() {
             bloodType: 'O+',
             phone: '+1-555-0123'
         };
-        updateProfileDisplay(mockProfile);
+        const mockStats = {
+            totalDonors: 25,
+            totalRequests: 12,
+            daysActive: 45
+        };
+        updateProfileDisplay(mockProfile, mockStats);
     }
 }
 
-function updateProfileDisplay(profile) {
+function updateProfileDisplay(profile, stats) {
     const profileName = document.getElementById('profile-name');
     const profileEmail = document.getElementById('profile-email');
     const profileRole = document.getElementById('profile-role');
@@ -2072,6 +2179,23 @@ function updateProfileDisplay(profile) {
     if (profileRole) profileRole.textContent = profile.role || 'User';
     if (editFullName) editFullName.value = `${profile.firstName} ${profile.lastName}`;
     if (editEmail) editEmail.value = profile.email;
+
+    // Update profile stats
+    const totalDonors = document.getElementById('total-donors');
+    const totalRequests = document.getElementById('total-requests');
+    const accountAge = document.getElementById('account-age');
+
+    if (stats) {
+        if (totalDonors) {
+            totalDonors.textContent = stats.totalDonors || 0;
+        }
+        if (totalRequests) {
+            totalRequests.textContent = stats.totalRequests || 0;
+        }
+        if (accountAge) {
+            accountAge.textContent = stats.daysActive || 0;
+        }
+    }
 }
 
 async function handleProfileUpdate(e) {
@@ -2652,11 +2776,186 @@ function filterCampaigns() {
 }
 
 function generateReport() {
-    showInfo('Report generation functionality coming soon!');
+    const reportType = document.getElementById('report-type').value;
+    const reportPeriod = document.getElementById('report-period').value;
+
+    // Show loading state
+    const generateBtn = document.querySelector('button[onclick="generateReport()"]');
+    const originalText = generateBtn.innerHTML;
+    generateBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating...';
+    generateBtn.disabled = true;
+
+    // Simulate report generation with dynamic data
+    setTimeout(() => {
+        updateReportData(reportType, reportPeriod);
+        generateBtn.innerHTML = originalText;
+        generateBtn.disabled = false;
+        showSuccess(`${reportType.charAt(0).toUpperCase() + reportType.slice(1)} report generated successfully for ${reportPeriod} period!`);
+    }, 2000);
 }
 
 function exportReport() {
-    showInfo('Report export functionality coming soon!');
+    const reportType = document.getElementById('report-type').value;
+    const reportPeriod = document.getElementById('report-period').value;
+
+    // Show loading state
+    const exportBtn = document.querySelector('button[onclick="exportReport()"]');
+    const originalText = exportBtn.innerHTML;
+    exportBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Exporting...';
+    exportBtn.disabled = true;
+
+    // Simulate export functionality
+    setTimeout(() => {
+        // Create CSV content based on report type
+        const csvContent = generateCSVContent(reportType, reportPeriod);
+
+        // Create and download file
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        link.setAttribute('href', url);
+        link.setAttribute('download', `${reportType}_report_${reportPeriod}_${new Date().toISOString().split('T')[0]}.csv`);
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        exportBtn.innerHTML = originalText;
+        exportBtn.disabled = false;
+        showSuccess(`${reportType.charAt(0).toUpperCase() + reportType.slice(1)} report exported successfully!`);
+    }, 1500);
+}
+
+function generateCSVContent(reportType, period) {
+    let csvContent = '';
+
+    switch (reportType) {
+        case 'donor':
+            csvContent = [
+                ['Report Type', 'Donor Statistics'],
+                ['Period', period],
+                ['Generated Date', new Date().toLocaleDateString()],
+                [],
+                ['Metric', 'Value'],
+                ['New Donors', getReportMetric('donor-new-count')],
+                ['Total Donations', getReportMetric('donor-total-donations')],
+                ['Eligibility Rate', getReportMetric('donor-eligibility-rate') + '%']
+            ];
+            break;
+
+        case 'inventory':
+            csvContent = [
+                ['Report Type', 'Blood Inventory'],
+                ['Period', period],
+                ['Generated Date', new Date().toLocaleDateString()],
+                [],
+                ['Metric', 'Value'],
+                ['Total Units', getReportMetric('inventory-total-units')],
+                ['Low Stock Units', getReportMetric('inventory-low-stock')],
+                ['Critical Stock Units', getReportMetric('inventory-critical-stock-units')],
+                ['Expiring Soon', getReportMetric('inventory-expiring')]
+            ];
+            break;
+
+        case 'request':
+            csvContent = [
+                ['Report Type', 'Blood Requests'],
+                ['Period', period],
+                ['Generated Date', new Date().toLocaleDateString()],
+                [],
+                ['Metric', 'Value'],
+                ['Total Requests', getReportMetric('requests-total')],
+                ['Approved Requests', getReportMetric('requests-approved')],
+                ['Pending Requests', getReportMetric('requests-pending')]
+            ];
+            break;
+
+        case 'campaign':
+            csvContent = [
+                ['Report Type', 'Campaign Performance'],
+                ['Period', period],
+                ['Generated Date', new Date().toLocaleDateString()],
+                [],
+                ['Metric', 'Value'],
+                ['Active Campaigns', getReportMetric('campaigns-active')],
+                ['Total Registrations', getReportMetric('campaigns-registrations')],
+                ['Successful Donations', getReportMetric('campaigns-donations')]
+            ];
+            break;
+    }
+
+    return csvContent.map(row => row.map(cell => `"${cell}"`).join(',')).join('\n');
+}
+
+function getReportMetric(elementId) {
+    const element = document.getElementById(elementId);
+    return element ? element.textContent.replace(/,/g, '').replace(/[^0-9.-]/g, '') : '0';
+}
+
+function updateReportData(reportType, period) {
+    // Update report cards with dynamic data based on type and period
+    const mockData = {
+        donor: {
+            weekly: { new: 2, total: 15, rate: '92%' },
+            monthly: { new: 8, total: 67, rate: '94%' },
+            quarterly: { new: 25, total: 203, rate: '96%' },
+            yearly: { new: 95, total: 812, rate: '95%' }
+        },
+        inventory: {
+            weekly: { total: 145, low: 35, expiring: 6 },
+            monthly: { total: 149, low: 40, expiring: 8 },
+            quarterly: { total: 156, low: 42, expiring: 12 },
+            yearly: { total: 180, low: 45, expiring: 15 }
+        },
+        request: {
+            weekly: { total: 3, approved: 2, pending: 1 },
+            monthly: { total: 12, approved: 9, pending: 3 },
+            quarterly: { total: 45, approved: 38, pending: 7 },
+            yearly: { total: 156, approved: 142, pending: 14 }
+        },
+        campaign: {
+            weekly: { active: 1, registrations: 45, donations: 28 },
+            monthly: { active: 3, registrations: 156, donations: 89 },
+            quarterly: { active: 8, registrations: 523, donations: 312 },
+            yearly: { active: 24, registrations: 1890, donations: 1245 }
+        }
+    };
+
+    const data = mockData[reportType][period];
+
+    if (reportType === 'donor') {
+        document.getElementById('donor-new-count').textContent = data.new;
+        document.getElementById('donor-total-donations').textContent = data.total;
+        document.getElementById('donor-eligibility-rate').textContent = data.rate;
+    } else if (reportType === 'inventory') {
+        document.getElementById('inventory-total-units').textContent = data.total;
+        document.getElementById('inventory-low-stock').textContent = data.low;
+        document.getElementById('inventory-expiring').textContent = data.expiring;
+    } else if (reportType === 'request') {
+        document.getElementById('requests-total').textContent = data.total;
+        document.getElementById('requests-approved').textContent = data.approved;
+        document.getElementById('requests-pending').textContent = data.pending;
+    } else if (reportType === 'campaign') {
+        document.getElementById('campaigns-active').textContent = data.active;
+        document.getElementById('campaigns-registrations').textContent = data.registrations;
+        document.getElementById('campaigns-donations').textContent = data.donations;
+    }
+}
+
+function viewDonorReport() {
+    showInfo('Opening detailed donor report...');
+}
+
+function viewInventoryReport() {
+    showInfo('Opening detailed inventory report...');
+}
+
+function viewRequestsReport() {
+    showInfo('Opening detailed requests report...');
+}
+
+function viewCampaignsReport() {
+    showInfo('Opening detailed campaigns report...');
 }
 
 // Export functions for global access
@@ -2688,3 +2987,7 @@ window.changeAvatar = changeAvatar;
 window.saveSettings = saveSettings;
 window.resetSettings = resetSettings;
 window.setupDashboardQuickActions = setupDashboardQuickActions;
+window.viewDonorReport = viewDonorReport;
+window.viewInventoryReport = viewInventoryReport;
+window.viewRequestsReport = viewRequestsReport;
+window.viewCampaignsReport = viewCampaignsReport;
